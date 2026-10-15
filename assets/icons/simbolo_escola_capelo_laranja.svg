@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Instituições de ensino — capelo laranja</title>
+  <defs>
+    <filter id="sombra-capelo" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <g filter="url(#sombra-capelo)" fill="#FF7A00" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 25 32 13l25 12-25 12L7 25Z"/>
+    <path d="M18 32v9c4 4.2 8.8 6.3 14 6.3S42 45.2 46 41v-9l-14 6.7L18 32Z"/>
+    <path d="M53 28v10.5" fill="none"/>
+    <path d="m53 38.5-2.8 6h5.6l-2.8-6Z"/>
+  </g>
+</svg>

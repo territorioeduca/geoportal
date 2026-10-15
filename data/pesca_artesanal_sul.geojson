@@ -1,0 +1,346 @@
+{
+    "type":  "FeatureCollection",
+    "name":  "pesca_artesanal_sul",
+    "features":  [
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha do Cacau (+antiga família Espírito Santo)",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Naufragados",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.561259,
+                                                              -27.83564
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Associação de Marinheiros e Pescadores Farol de Naufragados",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Associação",
+                                            "localidade":  "Naufragados",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.565291,
+                                                              -27.833942
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Valdir Parati",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Taperinha da Caieira (Ribeirão da Ilha)",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.559833,
+                                                              -27.792088
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Adauto",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Caieira",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.559871,
+                                                              -27.813515
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha da Família Pelicano (DAU)",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Caiacanga-Açu",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.57489,
+                                                              -27.766043
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha do Zequinha",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Caiacanga-Açu",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.568367,
+                                                              -27.758218
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Iris",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Caiacanga",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.573335,
+                                                              -27.770315
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Família Alvim",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Família",
+                                            "localidade":  "Caiacanga (Ribeirão da Ilha)",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.574634,
+                                                              -27.774696
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Nei",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Costeira do Ribeirão (Ribeirão da Ilha)",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.559388,
+                                                              -27.745422
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "APAT - Associação de Pescadores Artesanais da Tapera",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Associação",
+                                            "localidade":  "Tapera",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.566866,
+                                                              -27.690814
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Associação de pescadores da Armação do Pântano do Sul",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Associação",
+                                            "localidade":  "Armação",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.500894,
+                                                              -27.750397
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Nabor",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Ilha do Campeche",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.465657,
+                                                              -27.695811
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha do Arante",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Pântano do Sul",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.507059,
+                                                              -27.783006
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha do Didi",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Pântano do Sul",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.508182,
+                                                              -27.783006
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Dario - Diju",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Pântano do Sul",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.506827,
+                                                              -27.7836
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha Dna Laura",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Morro das Pedras",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.505465,
+                                                              -27.725214
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Pedro Aparício Inácio",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Pescador",
+                                            "localidade":  "Campeche",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.481947,
+                                                              -27.69214
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha do Getúlio",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Campeche",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.480982,
+                                                              -27.690373
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "Parelha FADA",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Parelha",
+                                            "localidade":  "Campeche",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.479372,
+                                                              -27.684654
+                                                          ]
+                                      }
+                     },
+                     {
+                         "type":  "Feature",
+                         "properties":  {
+                                            "nome":  "ASCAPC - Associação de Social, Cultural e Artesanal de Pescadores do Campeche",
+                                            "descricao":  "Grupo de pescadores",
+                                            "categoria":  "Associação",
+                                            "localidade":  "Campeche",
+                                            "fonte":  "Tainhas ao Vento"
+                                        },
+                         "geometry":  {
+                                          "type":  "Point",
+                                          "coordinates":  [
+                                                              -48.480713,
+                                                              -27.688278
+                                                          ]
+                                      }
+                     }
+                 ]
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geoportal Território Educa</title>
+    <meta name="description" content="Educação, pesca artesanal, aquicultura e patrimônio socioambiental em Florianópolis.">
+
+    <!-- Bibliotecas de terceiros (locais, versões fixas) -->
+    <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
+    <link rel="stylesheet" href="vendor/leaflet.markercluster-1.5.3/MarkerCluster.css">
+
+    <!-- CSS do geoportal -->
+    <link rel="stylesheet" href="css/style.css?v=20261015-sidebar1">
+</head>
+
+<body>
+    <a class="pular" href="#map">Ir para o mapa</a>
+
+    <header class="topo">
+        <div class="topo__superior">
+            <button id="btn-painel" class="btn-painel" type="button" aria-controls="painel" aria-expanded="true" aria-label="Recolher painel de camadas" title="Recolher painel de camadas">
+                <svg class="btn-painel__icone" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+                <span class="btn-painel__texto">Camadas</span>
+                <svg class="btn-painel__seta" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="topo__texto">
+                <a href="#map" id="link-retorno-mapa" class="topo__titulo-link" title="Retornar ao mapa interativo" aria-label="Geoportal Território Educa — Retornar ao mapa interativo">
+                    <h1>Geoportal Território Educa</h1>
+                </a>
+                <p>Educação, ciência e conhecimento territorial</p>
+            </div>
+            <button id="btn-menu-mobile" class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu-institucional" aria-label="Menu institucional">
+                <svg class="nav__icone-hamburguer" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                <span>Menu</span>
+            </button>
+        </div>
+        <nav class="topo__nav" aria-label="Navegação institucional">
+            <ul id="menu-institucional" class="nav__lista">
+                <li><button class="nav__item" type="button" data-secao="secao-projeto">O projeto</button></li>
+                <li><button class="nav__item" type="button" data-secao="secao-fontes">Dados e fontes</button></li>
+                <li><button class="nav__item" type="button" data-secao="secao-parceiros">Parceiros</button></li>
+                <li><button class="nav__item" type="button" data-secao="secao-contato">Contato</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="corpo">
+        <aside id="painel" class="painel" aria-label="Camadas, legenda e filtros">
+            <div id="aviso" class="aviso" role="alert" hidden></div>
+            <div id="painel-conteudo" class="painel__conteudo"></div>
+        </aside>
+        <div id="painel-backdrop" class="painel-backdrop" aria-hidden="true"></div>
+
+        <main class="mapa-area">
+            <div id="map" role="application" aria-label="Mapa interativo do Território Educa"></div>
+        </main>
+
+        <!-- Fundo semitransparente (backdrop de referência) -->
+        <div id="modal-backdrop" class="modal-backdrop" hidden></div>
+
+        <!-- Gaveta institucional lateral direita (experimental — substitui a apresentação central) -->
+        <!-- Referência recuperável: para restaurar a apresentação em modal central, consulte a folha css/style.css -->
+        <aside id="modal-sobre" class="gaveta modal" aria-labelledby="modal-sobre-titulo" aria-label="Informações institucionais" hidden>
+            <div class="gaveta__conteudo modal__conteudo">
+                <div class="gaveta__topo modal__topo">
+                    <h2 id="modal-sobre-titulo" class="gaveta__titulo modal__titulo">O projeto</h2>
+                    <button id="btn-fechar-modal" class="gaveta__fechar modal__fechar" type="button" aria-label="Fechar painel de informações">
+                        &times;
+                    </button>
+                </div>
+                <div class="gaveta__corpo modal__corpo">
+                    <!-- Seção 1: O projeto -->
+                    <div id="secao-projeto" class="modal__painel-secao" role="region" aria-labelledby="modal-sobre-titulo">
+                    <h3>Sobre o Geoportal Território Educa</h3>
+                    <p class="secao-subtitulo"><strong>Conhecimento, educação e participação para valorizar os territórios e seus saberes.</strong></p>
+                    <p>O Geoportal Território Educa é uma plataforma digital interativa de visualização e compartilhamento de informações geográficas e socioambientais, desenvolvida no âmbito do Território Educa, em parceria institucional com o Instituto de Ecologização de Mares, Campo e Cidades (IEMC²).</p>
+                    <p>A plataforma busca ampliar o acesso ao conhecimento territorial, aproximando ciência, educação e sociedade e contribuindo para a valorização da biodiversidade, das culturas tradicionais e dos modos de vida associados aos ecossistemas costeiros e marinhos.</p>
+                    <p>Com foco inicial no sul da Ilha de Santa Catarina, em Florianópolis, reúne informações sobre instituições de ensino, pesca artesanal, aquicultura, unidades de conservação e ecossistemas costeiros. Suas camadas temáticas permitem explorar relações entre os ambientes naturais, as atividades humanas e as formas de ocupação e uso do território.</p>
+                    <p>A iniciativa dialoga com a Tecnologia Social Mutuca Educa, desenvolvida e conduzida pela Associação das Dunas de Florianópolis (ADUF), e com sua expansão metodológica no Território Educa, fundamentadas na educação socioambiental, na justiça climática, na valorização dos saberes tradicionais e ancestrais e na participação comunitária.</p>
+
+                    <h3>Princípios orientadores</h3>
+                    <ul class="principios-lista">
+                        <li class="principio-item">
+                            <strong>Educomunicação:</strong> uso de recursos digitais, cartográficos e narrativas territoriais para estimular a comunicação participativa, o diálogo de saberes e a construção compartilhada de conhecimentos.
+                        </li>
+                        <li class="principio-item">
+                            <strong>Ciência cidadã:</strong> incentivo à participação de estudantes, educadores, pesquisadores e comunidades na observação, no registro e na interpretação de fenômenos socioambientais, reconhecendo diferentes sujeitos como produtores de conhecimento.
+                        </li>
+                        <li class="principio-item">
+                            <strong>Popularização da ciência:</strong> democratização do acesso às informações científicas e territoriais por meio de linguagem acessível e ferramentas interativas, aproximando o conhecimento acadêmico das experiências e dos saberes locais.
+                        </li>
+                    </ul>
+
+                    <p>Ao integrar informações geoespaciais e referências socioculturais, o geoportal busca apoiar atividades pedagógicas, pesquisas, educação ambiental e mobilização comunitária, contribuindo para compreender as transformações ambientais e climáticas e reconhecer o patrimônio natural e cultural dos territórios.</p>
+                    <p>Mais do que representar elementos no espaço geográfico, a plataforma pretende tornar visíveis as relações entre <strong>território, biodiversidade, cultura e sociedade</strong>, fortalecendo a circulação do conhecimento e as possibilidades de participação social e cuidado com os ecossistemas costeiros.</p>
+                    <p>O geoportal está em desenvolvimento e poderá incorporar progressivamente novos dados, recursos educativos e mecanismos de colaboração territorial.</p>
+                </div>
+
+                <!-- Seção 2: Dados e fontes -->
+                <div id="secao-fontes" class="modal__painel-secao" role="region" aria-labelledby="modal-sobre-titulo" hidden>
+                    <ul class="modal__lista">
+                        <li><strong>Unidades de Conservação:</strong> PMF – Geoportal.</li>
+                        <li><strong>Áreas aquícolas:</strong> MPA – SINAU.</li>
+                        <li><strong>Grupos de pescadores:</strong> Tainhas ao Vento.</li>
+                        <li><strong>Instituições de ensino:</strong> registros do Mutuca Educa 2026, Tecnologia Social realizada pela Associação das Dunas de Florianópolis (ADUF).</li>
+                        <li><strong>Mapas-base:</strong> Esri World Imagery; © OpenStreetMap contributors.</li>
+                        <li><strong>Sistema geodésico:</strong> Dados em SIRGAS 2000 (publicados em WGS 84 / EPSG:4326).</li>
+                        <li><strong>Elaboração cartográfica:</strong> Cristiana Barbosa, ADUF, 2026.</li>
+                    </ul>
+                </div>
+
+                <!-- Seção 3: Parceiros -->
+                <div id="secao-parceiros" class="modal__painel-secao" role="region" aria-labelledby="modal-sobre-titulo" hidden>
+                    <div class="parceiros-grid">
+                        <div class="parceiro-card">
+                            <div class="parceiro-card__logo-wrap">
+                                <img src="assets/logos/logo_aduf.png" alt="Logotipo da ADUF — Associação das Dunas de Florianópolis" class="parceiro-card__logo" loading="lazy">
+                            </div>
+                            <div class="parceiro-card__info">
+                                <h3 class="parceiro-card__nome">ADUF — Associação das Dunas de Florianópolis</h3>
+                                <p class="parceiro-card__papel">Organização responsável pelo Território Educa e pela Tecnologia Social Mutuca Educa.</p>
+                            </div>
+                        </div>
+
+                        <div class="parceiro-card">
+                            <div class="parceiro-card__logo-wrap">
+                                <img src="assets/logos/logo_mutuca_educa.png" alt="Logotipo da Tecnologia Social Mutuca Educa" class="parceiro-card__logo" loading="lazy">
+                            </div>
+                            <div class="parceiro-card__info">
+                                <h3 class="parceiro-card__nome">Mutuca Educa</h3>
+                                <p class="parceiro-card__papel">Tecnologia Social de educação socioambiental, arte pública e mobilização comunitária, desenvolvida pela ADUF e reconhecida pela Fundação Banco do Brasil.</p>
+                            </div>
+                        </div>
+
+                        <div class="parceiro-card">
+                            <div class="parceiro-card__logo-wrap">
+                                <img src="assets/logos/logo_iemc2.jpg" alt="Logotipo do Instituto de Ecologização de Mares, Campo e Cidades (IEMC²)" class="parceiro-card__logo" loading="lazy">
+                            </div>
+                            <div class="parceiro-card__info">
+                                <h3 class="parceiro-card__nome">IEMC² — Instituto de Ecologização de Mares, Campo e Cidades</h3>
+                                <p class="parceiro-card__papel">Parceiro institucional do Geoportal Território Educa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 4: Contato -->
+                <div id="secao-contato" class="modal__painel-secao" role="region" aria-labelledby="modal-sobre-titulo" hidden>
+                    <div class="contato-secao">
+                        <h3 class="contato-secao__titulo">Contato direto — Geoportal Território Educa</h3>
+                        <ul class="contato-lista">
+                            <li class="contato-item">
+                                <span class="contato-rotulo">Responsável:</span>
+                                <span class="contato-valor">Cristiana Barbosa</span>
+                            </li>
+                            <li class="contato-item">
+                                <span class="contato-rotulo">WhatsApp:</span>
+                                <a class="contato-link" href="https://wa.me/5548984466622" target="_blank" rel="noopener noreferrer">
+                                    <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                    (48) 98446-6622
+                                </a>
+                            </li>
+                            <li class="contato-item">
+                                <span class="contato-rotulo">E-mail:</span>
+                                <a class="contato-link" href="mailto:crisilha@gmail.com">
+                                    <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                    crisilha@gmail.com
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="contato-secao">
+                        <h3 class="contato-secao__titulo">Canais institucionais</h3>
+                        <ul class="contato-lista">
+                            <li class="contato-item">
+                                <span class="contato-rotulo">ADUF:</span>
+                                <a class="contato-link" href="https://www.instagram.com/dunasdefloripa/" target="_blank" rel="noopener noreferrer">
+                                    <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                    Instagram @dunasdefloripa
+                                </a>
+                            </li>
+                            <li class="contato-item">
+                                <span class="contato-rotulo">Mutuca Educa:</span>
+                                <a class="contato-link" href="https://www.instagram.com/mutucaeduca/" target="_blank" rel="noopener noreferrer">
+                                    <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                    Instagram @mutucaeduca
+                                </a>
+                            </li>
+                            <li class="contato-item">
+                                <span class="contato-rotulo">IEMC²:</span>
+                                <a class="contato-link" href="https://reitoria.ufsc.br/2026/06/24/ufsc-inaugura-instituto-de-ecologizacao-de-mares-campo-e-cidades-para-combate-a-fome-e-pobreza/" target="_blank" rel="noopener noreferrer">
+                                    <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    Página de referência institucional na UFSC
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </aside>
+    </div>
+
+    <noscript>
+        <p class="aviso">Este geoportal requer JavaScript habilitado.</p>
+    </noscript>
+
+    <!-- Leaflet e Leaflet.markercluster (scripts globais) -->
+    <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
+    <script src="vendor/leaflet.markercluster-1.5.3/leaflet.markercluster.js"></script>
+
+    <!-- Código do geoportal (módulos ES) -->
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
