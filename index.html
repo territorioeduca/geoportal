@@ -37,19 +37,19 @@
                 </a>
                 <p>Educação, ciência e conhecimento territorial</p>
             </div>
+            <nav class="topo__nav" aria-label="Navegação institucional">
+                <ul id="menu-institucional" class="nav__lista">
+                    <li><button class="nav__item" type="button" data-secao="secao-projeto">O projeto</button></li>
+                    <li><button class="nav__item" type="button" data-secao="secao-fontes">Dados e fontes</button></li>
+                    <li><button class="nav__item" type="button" data-secao="secao-parceiros">Parceiros</button></li>
+                    <li><button class="nav__item" type="button" data-secao="secao-contato">Contato</button></li>
+                </ul>
+            </nav>
             <button id="btn-menu-mobile" class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu-institucional" aria-label="Menu institucional">
                 <svg class="nav__icone-hamburguer" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 <span>Menu</span>
             </button>
         </div>
-        <nav class="topo__nav" aria-label="Navegação institucional">
-            <ul id="menu-institucional" class="nav__lista">
-                <li><button class="nav__item" type="button" data-secao="secao-projeto">O projeto</button></li>
-                <li><button class="nav__item" type="button" data-secao="secao-fontes">Dados e fontes</button></li>
-                <li><button class="nav__item" type="button" data-secao="secao-parceiros">Parceiros</button></li>
-                <li><button class="nav__item" type="button" data-secao="secao-contato">Contato</button></li>
-            </ul>
-        </nav>
     </header>
 
     <div class="corpo">
@@ -111,6 +111,7 @@
                         <li><strong>Áreas aquícolas:</strong> MPA – SINAU.</li>
                         <li><strong>Grupos de pescadores:</strong> Tainhas ao Vento.</li>
                         <li><strong>Instituições de ensino:</strong> registros do Mutuca Educa 2026, Tecnologia Social realizada pela Associação das Dunas de Florianópolis (ADUF).</li>
+                        <li><strong>Patrimônio e cultura:</strong> Ponto de Cultura Indígena Goj Tá Sá, Roteiro Ecopedagógico da Praia da Mutuca e Monumentos Artísticos (ADUF / Coletivo Espaço Tempo / Juan Mandala).</li>
                         <li><strong>Mapas-base:</strong> Esri World Imagery; © OpenStreetMap contributors.</li>
                         <li><strong>Sistema geodésico:</strong> Dados em SIRGAS 2000 (publicados em WGS 84 / EPSG:4326).</li>
                         <li><strong>Elaboração cartográfica:</strong> Cristiana Barbosa, ADUF, 2026.</li>
@@ -149,6 +150,16 @@
                                 <p class="parceiro-card__papel">Parceiro institucional do Geoportal Território Educa.</p>
                             </div>
                         </div>
+
+                        <div class="parceiro-card">
+                            <div class="parceiro-card__logo-wrap">
+                                <img src="assets/logos/logo_coletivo_espaco_tempo.png" alt="Logotipo do Coletivo Espaço Tempo" class="parceiro-card__logo" loading="lazy">
+                            </div>
+                            <div class="parceiro-card__info">
+                                <h3 class="parceiro-card__nome">Coletivo Espaço Tempo</h3>
+                                <p class="parceiro-card__papel">Coletivo parceiro em arte-educação, que desenvolve monumentos artísticos e ações de educação socioambiental, valorizando a biodiversidade, a cultura e o pertencimento territorial.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -179,7 +190,7 @@
                     </div>
 
                     <div class="contato-secao">
-                        <h3 class="contato-secao__titulo">Canais institucionais</h3>
+                        <h3 class="contato-secao__titulo">Redes sociais e links institucionais</h3>
                         <ul class="contato-lista">
                             <li class="contato-item">
                                 <span class="contato-rotulo">ADUF:</span>
@@ -200,6 +211,13 @@
                                 <a class="contato-link" href="https://reitoria.ufsc.br/2026/06/24/ufsc-inaugura-instituto-de-ecologizacao-de-mares-campo-e-cidades-para-combate-a-fome-e-pobreza/" target="_blank" rel="noopener noreferrer">
                                     <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                     Página de referência institucional na UFSC
+                                </a>
+                            </li>
+                            <li class="contato-item">
+                                <span class="contato-rotulo">Coletivo Espaço Tempo:</span>
+                                <a class="contato-link" href="https://www.instagram.com/coletivoespacotempo/" target="_blank" rel="noopener noreferrer">
+                                    <svg class="contato-icone" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                    Instagram @coletivoespacotempo
                                 </a>
                             </li>
                         </ul>

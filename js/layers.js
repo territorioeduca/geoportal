@@ -19,12 +19,17 @@ const COR = {
     resex: "#38A3A5",
     manguezal: "#22C55E",
     sede: "#FF0000",
-    limite: "#D9DCD6"        // PROVISÓRIO: no QGIS o limite está desligado no mapa principal
+    limite: "#D9DCD6",        // PROVISÓRIO: no QGIS o limite está desligado no mapa principal
+    goj_ta_sa: "#8854A3",
+    mutuca: "#29865B",
+    monumentos: "#D88335"
 };
 
 const ICONE_ESCOLA = "assets/icons/simbolo_escola_capelo_laranja.svg";
 const ICONE_PESCA = "assets/icons/peixe_grupos_pesca_artesanal.svg.svg";
-const ICONE_RANCHO = "assets/icons/rancho_provisorio.svg";   // PROVISÓRIO
+const ICONE_GOJ_TA_SA = "assets/icons/marcador_cultural_goj_ta_sa.svg";
+const ICONE_MUTUCA = "assets/icons/marcador_pegadas_mutuca.svg";
+const ICONE_MONUMENTOS = "assets/icons/marcador_monumentos_artisticos.svg";
 
 // ------------------------------------------------------------
 // Panes (ordem de empilhamento, de baixo para cima)
@@ -53,8 +58,9 @@ export function criarPanes(map) {
 // ------------------------------------------------------------
 export const GRUPOS = [
     { id: "ref", nome: "Referências territoriais", camadas: ["limite", "sede"] },
-    { id: "edu", nome: "Educação", camadas: ["instituicoes"] },
-    { id: "pesca", nome: "Pesca artesanal", camadas: ["pesca", "ranchos"] },
+    { id: "escolar", nome: "Comunidade escolar", camadas: ["instituicoes"] },
+    { id: "arte_edu", nome: "Arte-educação", camadas: ["trilha_mutuca", "monumentos"] },
+    { id: "tradicionais", nome: "Comunidades tradicionais", camadas: ["goj_ta_sa", "pesca"] },
     { id: "aqui", nome: "Aquicultura", camadas: ["areas"] },
     { id: "uc", nome: "Unidades de Conservação", camadas: ["mona", "resex"] },
     { id: "eco", nome: "Ecossistemas costeiros", camadas: ["manguezal"] }
@@ -118,16 +124,6 @@ export const CAMADAS = {
             // Localidades exibidas exatamente como estão nos dados (sem normalização).
             { campo: "localidade", rotulo: "Localidade" }
         ],
-        ligadaInicialmente: true
-    },
-
-    ranchos: {
-        titulo: "Ranchos de pesca da Tapera",
-        arquivo: "ranchos_pesca_tapera.geojson",
-        tipo: "ponto-icone",
-        icone: { url: ICONE_RANCHO, tamanho: [22, 22] },
-        titleMarcador: p => p.nome,
-        legenda: { forma: "icone", src: ICONE_RANCHO },
         ligadaInicialmente: true
     },
 
@@ -197,6 +193,40 @@ export const CAMADAS = {
             texto: () => "Manguezal da Tapera", classe: "lbl--abaixo-esq",
             minZoom: 13, maxZoom: 19, posicao: "centro-bounds"
         }],
+        ligadaInicialmente: true
+    },
+
+    goj_ta_sa: {
+        titulo: "Ponto de Cultura Indígena Goj Tá Sá",
+        arquivo: "territorio_indigena_goj_ta_sa.geojson",
+        tipo: "ponto-icone",
+        icone: { url: ICONE_GOJ_TA_SA, tamanho: [28, 31], ancora: [14, 31], popupAncora: [0, -30] },
+        titleMarcador: p => p.nome,
+        legenda: { forma: "icone", src: ICONE_GOJ_TA_SA },
+        ligadaInicialmente: true
+    },
+
+    trilha_mutuca: {
+        titulo: "Roteiro Ecopedagógico da Mutuca",
+        arquivo: "trilha_ecopedagogica_mutuca.geojson",
+        tipo: "ponto-icone",
+        icone: { url: ICONE_MUTUCA, tamanho: [28, 31], ancora: [23, 31], popupAncora: [-9, -30] },
+        titleMarcador: p => p.nome,
+        legenda: { forma: "icone", src: ICONE_MUTUCA },
+        ligadaInicialmente: true
+    },
+
+    monumentos: {
+        titulo: "Monumentos artísticos",
+        arquivo: "monumentos_artisticos.geojson",
+        tipo: "ponto-icone",
+        icone: { url: ICONE_MONUMENTOS, tamanho: [28, 31], ancora: [5, 31], popupAncora: [9, -30] },
+        titleMarcador: p => p.nome,
+        cluster: { classe: "cluster--monumentos", raio: 16 },
+        legenda: { forma: "icone", src: ICONE_MONUMENTOS },
+        filtros: [
+            { campo: "nome", rotulo: "Monumento" }
+        ],
         ligadaInicialmente: true
     }
 };
@@ -303,10 +333,16 @@ function construirCamada(def, geojson) {
     const onEachFeature = (feature, layer) => {
         const gerar = POPUPS[def.id];
         if (gerar) {
+            const temMidia = Boolean(feature.properties && feature.properties.imagem);
             layer.bindPopup(() => gerar(feature.properties), {
-                minWidth: 260,
-                maxWidth: 360,
-                className: "popup-te",
+                minWidth: temMidia ? 320 : 260,
+                maxWidth: temMidia ? 820 : 380,
+                className: temMidia ? "popup-te popup-te--amplo" : "popup-te",
+                autoPan: true,
+                autoPanPaddingTopLeft: L.point(20, 56),
+                autoPanPaddingBottomRight: L.point(20, 24),
+                keepInView: true,
+                closeOnEscapeKey: true,
                 autoClose: true,
                 closeOnClick: true
             });
@@ -334,8 +370,8 @@ function construirCamada(def, geojson) {
         const icone = L.icon({
             iconUrl: def.icone.url,
             iconSize: def.icone.tamanho,
-            iconAnchor: [def.icone.tamanho[0] / 2, def.icone.tamanho[1] / 2],
-            popupAnchor: [0, -def.icone.tamanho[1] / 2]
+            iconAnchor: def.icone.ancora || [def.icone.tamanho[0] / 2, def.icone.tamanho[1] / 2],
+            popupAnchor: def.icone.popupAncora || [0, -def.icone.tamanho[1] / 2]
         });
         rt.fabricaPontos = dados => L.geoJSON(dados, {
             pointToLayer: (f, latlng) => L.marker(latlng, {

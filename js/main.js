@@ -6,6 +6,7 @@
 
 import { criarPanes, carregarCamadas } from "./layers.js";
 import { iniciarUI, iniciarModalSobre } from "./ui.js";
+import { configurarCarrosseisPopup } from "./popups.js";
 
 // Inicializa o modal "Sobre o geoportal" imediatamente, sem esperar carregamento dos dados
 iniciarModalSobre();
@@ -33,10 +34,21 @@ map.on("popupopen", e => {
             map.closePopup(l);
         }
     });
+    const el = e.popup && e.popup.getElement();
+    if (el) {
+        configurarCarrosseisPopup(el);
+    }
 });
 
 map.on("click", () => {
     map.closePopup();
+});
+
+// Permite fechar o popup interativo com a tecla Esc
+window.addEventListener("keydown", e => {
+    if ((e.key === "Escape" || e.key === "Esc") && !document.body.classList.contains("gaveta-aberta")) {
+        map.closePopup();
+    }
 });
 
 window.map = map;

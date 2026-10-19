@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "territorio_indigena_goj_ta_sa",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "nome": "Casa de Passagem e Ponto de Cultura Indígena Goj Tá Sá", "categoria": "Cultura indígena", "localidade": "Saco dos Limões, Florianópolis — SC", "descricao": "Em novembro de 2025, a EBM Batista Pereira realizou uma visita à Casa de Passagem e Ponto de Cultura Indígena Goj Tá Sá, em parceria com a Tecnologia Social Mutuca Educa.", "imagem": "imagens/goj_ta_sa.jpg", "credito_imagem": "Cristiana Barbosa", "data_imagem": "Novembro de 2025" }, "geometry": { "type": "Point", "coordinates": [ -48.531594242502628, -27.612109776807863 ] } }
+]
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="36" viewBox="0 0 32 36">
+  <title>Monumentos Artísticos</title>
+  <defs>
+    <filter id="sombra-laranja" x="-20%" y="-10%" width="140%" height="130%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#3D2006" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Marcador Pin Laranja #D88335 -->
+  <path d="M16 2 C9.37 2 4 7.37 4 14 C4 22.5 16 34 16 34 C16 34 28 22.5 28 14 C28 7.37 22.63 2 16 2 Z"
+        fill="#D88335" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" filter="url(#sombra-laranja)"/>
+  <!-- Ícone estilizado de arte / escultura / monumento público -->
+  <!-- Base/Pedestal -->
+  <rect x="10" y="19" width="12" height="2.5" rx="0.5" fill="#FFFFFF"/>
+  <rect x="11.5" y="16.5" width="9" height="2.5" rx="0.5" fill="#FFFFFF"/>
+  <!-- Escultura geométrica/artística ascendente -->
+  <path d="M16 6 L12 14 H20 Z" fill="#FFFFFF"/>
+  <circle cx="16" cy="10" r="1.5" fill="#D88335"/>
+</svg>
