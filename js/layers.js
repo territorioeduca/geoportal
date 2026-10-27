@@ -5,7 +5,7 @@
 // Nenhuma geometria é alterada: clusters e máscara são só visuais.
 // ============================================================
 
-import { POPUPS } from "./popups.js";
+import { POPUPS } from "./popups.js?v=20261026-v15";
 
 const SENTINELA_VAZIO = "__vazio__";
 
@@ -429,7 +429,7 @@ function renderizar(rt, feats) {
 // Carregamento
 // ------------------------------------------------------------
 async function buscarJson(arquivo) {
-    const resp = await fetch(`data/${arquivo}`);
+    const resp = await fetch(`data/${arquivo}?v=20261026-v15`, { cache: "no-store" });
     if (!resp.ok) throw new Error(`Falha ao carregar ${arquivo} (HTTP ${resp.status})`);
     return resp.json();
 }

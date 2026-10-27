@@ -4,9 +4,9 @@
 // Leaflet (L) e Leaflet.markercluster vêm de vendor/ (scripts globais).
 // ============================================================
 
-import { criarPanes, carregarCamadas } from "./layers.js";
-import { iniciarUI, iniciarModalSobre } from "./ui.js";
-import { configurarCarrosseisPopup } from "./popups.js";
+import { criarPanes, carregarCamadas } from "./layers.js?v=20261026-v15";
+import { iniciarUI, iniciarModalSobre } from "./ui.js?v=20261026-v15";
+import { configurarCarrosseisPopup } from "./popups.js?v=20261026-v15";
 
 // Inicializa o modal "Sobre o geoportal" imediatamente, sem esperar carregamento dos dados
 iniciarModalSobre();

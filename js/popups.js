@@ -120,69 +120,90 @@ export function montarMidia(p) {
     });
     if (!imagens.length) return "";
 
+    // Leitura por posição com separador ';'
+    const rawLegendas = !vazio(p.legenda_imagem)
+        ? String(p.legenda_imagem).split(";").map(s => s.trim())
+        : [];
     const rawCreditos = !vazio(p.credito_imagem)
-        ? String(p.credito_imagem).split(";").map(s => s.trim()).filter(Boolean)
+        ? String(p.credito_imagem).split(";").map(s => s.trim())
         : [];
     const rawDatas = !vazio(p.data_imagem)
-        ? String(p.data_imagem).split(";").map(s => s.trim()).filter(Boolean)
+        ? String(p.data_imagem).split(";").map(s => s.trim())
         : [];
 
     const total = imagens.length;
     const nomeFeicao = !vazio(p.nome) ? p.nome : "Registro";
 
     const slides = imagens.map((src, i) => {
-        // Associação por posição ou reaproveitamento do valor único
-        const credito = rawCreditos.length > i
+        // Legenda opcional por posição: só existe se houver texto na posição i (sem fallback)
+        const legenda = (rawLegendas.length > i && rawLegendas[i] !== "") ? rawLegendas[i] : "";
+
+        // Crédito e data: mantém valor da posição ou reaproveita o valor único na posição 0
+        const credito = (rawCreditos.length > i && rawCreditos[i] !== "")
             ? rawCreditos[i]
             : (rawCreditos.length ? rawCreditos[0] : "");
-        const data = rawDatas.length > i
+        const data = (rawDatas.length > i && rawDatas[i] !== "")
             ? rawDatas[i]
             : (rawDatas.length ? rawDatas[0] : "");
 
-        const partesLegenda = [];
-        if (credito) partesLegenda.push(`Foto: ${credito}`);
-        if (data) partesLegenda.push(data);
-        const legendaTexto = partesLegenda.join(" • ");
+        const partesMeta = [];
+        if (credito) partesMeta.push(`Foto: ${credito}`);
+        if (data) partesMeta.push(data);
+        const metaTexto = partesMeta.join(" • ");
 
         return {
             src,
             alt: `${nomeFeicao} — Foto ${i + 1} de ${total}`,
-            legenda: legendaTexto
+            legenda,
+            meta: metaTexto
         };
     });
 
     if (total === 1) {
         const s = slides[0];
+        const infoHtml = (s.legenda || s.meta)
+            ? `<figcaption class="pp-midia__info">`
+                + (s.legenda ? `<p class="pp-midia__legenda">${esc(s.legenda)}</p>` : "")
+                + (s.meta ? `<p class="pp-midia__meta">${esc(s.meta)}</p>` : "")
+                + `</figcaption>`
+            : "";
         return `<figure class="pp-midia">`
             + `<div class="pp-midia__moldura">`
             + `<img class="pp-midia__img" src="${esc(s.src)}" alt="${esc(s.alt)}" loading="lazy">`
             + `</div>`
-            + (s.legenda ? `<figcaption class="pp-midia__legenda">${esc(s.legenda)}</figcaption>` : "")
+            + infoHtml
             + `</figure>`;
     }
 
     const slidesHtml = slides.map((s, idx) => {
         const ativo = idx === 0 ? " pp-carrossel__slide--ativo" : "";
+        const infoHtml = (s.legenda || s.meta)
+            ? `<div class="pp-midia__info">`
+                + (s.legenda ? `<p class="pp-midia__legenda">${esc(s.legenda)}</p>` : "")
+                + (s.meta ? `<p class="pp-midia__meta">${esc(s.meta)}</p>` : "")
+                + `</div>`
+            : "";
         return `<div class="pp-carrossel__slide${ativo}" data-slide="${idx}">`
             + `<div class="pp-midia__moldura">`
             + `<img class="pp-midia__img" src="${esc(s.src)}" alt="${esc(s.alt)}" loading="lazy">`
             + `</div>`
-            + (s.legenda ? `<figcaption class="pp-midia__legenda">${esc(s.legenda)}</figcaption>` : "")
+            + infoHtml
             + `</div>`;
     }).join("");
 
+    const chevronEsq = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>`;
+    const chevronDir = `<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+
     return `<div class="pp-carrossel" data-total="${total}" data-atual="0" tabindex="0" role="region" aria-label="Galeria de fotos de ${esc(nomeFeicao)}">`
         + `<div class="pp-carrossel__slides">${slidesHtml}</div>`
-        + `<div class="pp-carrossel__barra">`
-        + `<button type="button" class="pp-carrossel__btn pp-carrossel__btn--ant" aria-label="Foto anterior" title="Foto anterior">‹</button>`
-        + `<span class="pp-carrossel__contador" aria-live="polite">1 de ${total}</span>`
-        + `<button type="button" class="pp-carrossel__btn pp-carrossel__btn--prox" aria-label="Próxima foto" title="Próxima foto">›</button>`
-        + `</div>`
+        + `<button type="button" class="pp-carrossel__seta pp-carrossel__seta--esq" aria-label="Foto anterior" title="Foto anterior">${chevronEsq}</button>`
+        + `<button type="button" class="pp-carrossel__seta pp-carrossel__seta--dir" aria-label="Próxima foto" title="Próxima foto">${chevronDir}</button>`
+        + `<div class="pp-carrossel__indicador" aria-live="polite">1 / ${total}</div>`
         + `</div>`;
 }
 
 /**
- * Ativa interações do carrossel (setas, clique na foto, scroll do mouse, teclado e touch)
+ * Ativa interações do carrossel (setas laterais, scroll do mouse, teclado, touch e clique na imagem)
  * e previne que cliques fechem o popup do mapa.
  */
 export function configurarCarrosseisPopup(container) {
@@ -193,9 +214,9 @@ export function configurarCarrosseisPopup(container) {
         carrossel.addEventListener("dblclick", e => e.stopPropagation());
         carrossel.addEventListener("mousedown", e => e.stopPropagation());
 
-        const btnAnt = carrossel.querySelector(".pp-carrossel__btn--ant");
-        const btnProx = carrossel.querySelector(".pp-carrossel__btn--prox");
-        const contador = carrossel.querySelector(".pp-carrossel__contador");
+        const btnAnt = carrossel.querySelector(".pp-carrossel__seta--esq");
+        const btnProx = carrossel.querySelector(".pp-carrossel__seta--dir");
+        const contador = carrossel.querySelector(".pp-carrossel__indicador");
         const slides = carrossel.querySelectorAll(".pp-carrossel__slide");
         const total = slides.length;
         if (total <= 1) return;
@@ -208,7 +229,7 @@ export function configurarCarrosseisPopup(container) {
             slides.forEach((s, idx) => {
                 s.classList.toggle("pp-carrossel__slide--ativo", idx === atual);
             });
-            if (contador) contador.textContent = `${atual + 1} de ${total}`;
+            if (contador) contador.textContent = `${atual + 1} / ${total}`;
         };
 
         if (btnAnt) {
@@ -226,12 +247,13 @@ export function configurarCarrosseisPopup(container) {
             };
         }
 
-        // Permite avançar imagem clicando na própria foto
+        // Permite avançar imagem clicando na foto (exceto nas setas)
         const molduras = carrossel.querySelectorAll(".pp-midia__moldura");
         molduras.forEach(m => {
             m.style.cursor = "pointer";
             m.title = "Clique para alternar para a próxima imagem";
             m.onclick = e => {
+                if (e.target.closest(".pp-carrossel__seta")) return;
                 e.preventDefault();
                 e.stopPropagation();
                 mudar(1);
@@ -426,11 +448,10 @@ export const POPUPS = {
         p.nome,
         p.categoria,
         [
-            texto("Categoria", p.categoria),
             texto("Localidade", p.localidade),
             texto("Descrição", p.descricao)
         ],
-        "Referência de valorização da cultura e saberes ancestrais associada ao Território Educa.",
+        null,
         montarMidia(p)
     ),
 
@@ -438,30 +459,21 @@ export const POPUPS = {
         p.nome,
         p.categoria,
         [
-            texto("Categoria", p.categoria),
             texto("Localidade", p.localidade),
-            texto("Descrição", p.descricao),
-            linha("Monumento no local", "Caranguejo-chama-maré (obra artística na Praia da Mutuca)")
+            texto("Descrição", p.descricao)
         ],
-        "Roteiro pedagógico e comunitário no âmbito da Tecnologia Social Mutuca Educa.",
+        null,
         montarMidia(p)
     ),
 
-    monumentos: p => {
-        const linhas = [
-            texto("Categoria", p.categoria),
+    monumentos: p => popup(
+        p.nome,
+        p.categoria,
+        [
             texto("Localidade", p.localidade),
             texto("Descrição", p.descricao)
-        ];
-        if (p.nome === "Caranguejo-chama-maré") {
-            linhas.push(linha("Ponto coincidente", "Roteiro Ecopedagógico da Praia da Mutuca"));
-        }
-        return popup(
-            p.nome,
-            p.categoria,
-            linhas,
-            "Iniciativa de valorização socioambiental e arte pública desenvolvida no Território Educa.",
-            montarMidia(p)
-        );
-    }
+        ],
+        null,
+        montarMidia(p)
+    )
 };

@@ -4,34 +4,50 @@
    Simbologia cartográfica preservada nas camadas do mapa.
    ============================================================ */
 
-/* Fallback local Montserrat (SIL OFL 1.1) — arquivos locais em assets/fonts/ */
+/* Tipografia moderna e robusta: Plus Jakarta Sans (arquivos locais em assets/fonts/) */
 @font-face {
-    font-family: "Montserrat";
+    font-family: "Plus Jakarta Sans";
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("../assets/fonts/montserrat-latin-400-normal.woff2") format("woff2");
+    src: url("../assets/fonts/plus-jakarta-sans-400.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: "Montserrat";
+    font-family: "Plus Jakarta Sans";
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url("../assets/fonts/montserrat-latin-500-normal.woff2") format("woff2");
+    src: url("../assets/fonts/plus-jakarta-sans-500.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: "Montserrat";
+    font-family: "Plus Jakarta Sans";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("../assets/fonts/plus-jakarta-sans-600.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url("../assets/fonts/montserrat-latin-700-normal.woff2") format("woff2");
+    src: url("../assets/fonts/plus-jakarta-sans-700.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url("../assets/fonts/plus-jakarta-sans-800.woff2") format("woff2");
 }
 
 :root {
-    /* Tipografia: Inter com fallback local e de sistema */
-    --fonte: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Montserrat", sans-serif;
+    /* Tipografia moderna, elegante e robusta para geoportais contemporâneos */
+    --fonte: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Montserrat", sans-serif;
 
     /* Paleta Costeira */
     --navy: #1E293B;        /* Slate 800 - Header & Destaques de Contraste */
@@ -1042,38 +1058,49 @@ body.gaveta-aberta .gaveta {
     overflow-y: auto;
 }
 
-/* Popups com mídia ampla (Layout horizontal: texto 40%, fotografia 60%, ocupando toda a altura da janela) */
+/* Popups com mídia ampla (Layout horizontal: texto à esquerda fixo, fotografia à direita) */
 .popup-te--amplo .leaflet-popup-content-wrapper {
     max-width: 820px !important;
     border-radius: 12px;
 }
 .popup-te--amplo .leaflet-popup-content {
-    margin: 14px 16px;
-    width: min(92vw, 780px) !important;
-    max-width: min(92vw, 780px) !important;
-    height: clamp(340px, 58vh, 500px);
-    max-height: calc(100vh - 100px) !important;
-    overflow: hidden;
+    margin: 10px 14px 10px 14px !important;
+    width: min(90vw, 760px) !important;
+    max-width: min(90vw, 760px) !important;
+    height: min(420px, calc(100vh - 160px)) !important;
+    min-height: 240px;
+    max-height: calc(100vh - 130px) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
 }
 
 .pp--com-midia {
     display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    grid-template-columns: 290px minmax(0, 1fr);
     gap: 16px;
     height: 100%;
+    max-height: 100%;
+    min-height: 0;
     align-items: stretch;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .pp__col-texto {
-    min-width: 0;
+    width: 290px;
+    min-width: 290px;
+    max-width: 290px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     height: 100%;
     max-height: 100%;
+    min-height: 0;
     overflow-y: auto;
-    padding-right: 6px;
+    padding-right: 8px;
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
+    flex-shrink: 0;
 }
 
 .pp__col-texto::-webkit-scrollbar {
@@ -1093,44 +1120,61 @@ body.gaveta-aberta .gaveta {
 .pp__col-midia {
     min-width: 0;
     height: 100%;
+    max-height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
 }
 
 /* ---------- Mídia e Carrossel em Popups ---------- */
 .pp-midia,
 .pp-carrossel {
+    position: relative;
     margin: 0;
     padding: 0;
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--linha);
-    background: var(--navy-dark);
+    background: #0f172a;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     height: 100%;
+    max-height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .pp-carrossel__slides {
     position: relative;
     width: 100%;
-    flex: 1;
+    flex: 1 1 0px;
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .pp-carrossel__slide {
     display: none;
-    height: 100%;
+    width: 100%;
+    flex: 1 1 0px;
+    min-height: 0;
     flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .pp-carrossel__slide--ativo {
     display: flex;
-    height: 100%;
-    animation: ppFade 0.22s ease-in-out;
+    width: 100%;
+    flex: 1 1 0px;
+    min-height: 0;
+    animation: ppFade 0.2s ease-in-out;
 }
 
 @keyframes ppFade {
@@ -1141,84 +1185,166 @@ body.gaveta-aberta .gaveta {
 .pp-midia__moldura {
     position: relative;
     width: 100%;
-    flex: 1;
+    flex: 1 1 0px;
     min-height: 0;
-    background-color: var(--navy-dark);
+    background-color: #0f172a;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
 }
 
 .pp-midia__img {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
     max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
     display: block;
+    margin: auto;
 }
 
-.pp-midia__legenda {
-    padding: 5px 8px;
-    font-size: 0.70rem;
-    color: var(--tinta-suave);
+/* Container de legenda e metadados na base da mídia */
+.pp-midia__info {
+    flex: 0 0 auto;
     background: #f8fafc;
     border-top: 1px solid var(--linha);
-    line-height: 1.3;
-    text-align: center;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+/* Legenda curta opcional: máx. 2 linhas, visível apenas quando houver texto */
+.pp-midia__legenda {
+    margin: 0;
+    padding: 0;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--navy);
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     word-break: normal;
     overflow-wrap: break-word;
-    flex-shrink: 0;
 }
 
-.pp-carrossel__barra {
+/* Linha de crédito e data: sempre abaixo da legenda */
+.pp-midia__meta {
+    margin: 0;
+    padding: 0;
+    font-size: 0.67rem;
+    line-height: 1.25;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Setas laterais de navegação: fixas nas laterais da foto ("seta para o lado") */
+.pp-carrossel__seta {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    z-index: 25;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 5px 10px;
-    background: #f8fafc;
-    border-top: 1px solid var(--linha);
-    flex-shrink: 0;
-}
-
-.pp-carrossel__btn {
-    display: inline-flex;
-    align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
-    padding: 0;
-    border: 1px solid var(--linha);
-    border-radius: 50%;
-    background: #ffffff;
-    color: var(--navy);
-    font-size: 1.1rem;
-    font-weight: 700;
-    line-height: 1;
     cursor: pointer;
-    transition: background-color 0.15s, border-color 0.15s, transform 0.1s;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.45);
+    transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    user-select: none;
+    padding: 0;
 }
 
-.pp-carrossel__btn:hover {
-    background: var(--cyan-light);
-    border-color: var(--teal);
-    color: var(--teal-dark);
+.pp-carrossel__seta:hover {
+    background: #0f172a;
+    color: #38bdf8;
+    border-color: #38bdf8;
+    transform: translateY(-50%) scale(1.12);
 }
 
-.pp-carrossel__btn:active {
-    transform: scale(0.92);
+.pp-carrossel__seta:active {
+    transform: translateY(-50%) scale(0.92);
 }
 
-.pp-carrossel__btn:focus-visible {
-    outline: 2px solid var(--teal);
+.pp-carrossel__seta:focus-visible {
+    outline: 2px solid #38bdf8;
     outline-offset: 2px;
 }
 
-.pp-carrossel__contador {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: var(--tinta-suave);
-    letter-spacing: 0.02em;
+.pp-carrossel__seta--esq {
+    left: 8px;
+}
+
+.pp-carrossel__seta--dir {
+    right: 8px;
+}
+
+/* Indicador de contador flutuante discreto no topo */
+.pp-carrossel__indicador {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 25;
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 2px 9px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Adaptação inteligente para telas baixas (laptops 1366x768 / viewports de baixa altura) */
+@media (max-height: 768px) {
+    .popup-te--amplo .leaflet-popup-content {
+        height: min(360px, calc(100vh - 140px)) !important;
+        max-height: calc(100vh - 110px) !important;
+        min-height: 210px;
+        margin: 6px 12px !important;
+    }
+    .pp-carrossel__seta {
+        width: 30px;
+        height: 30px;
+        top: 44%;
+    }
+    .pp-carrossel__seta svg {
+        width: 16px;
+        height: 16px;
+    }
+    .pp-carrossel__indicador {
+        font-size: 0.67rem;
+        padding: 2px 7px;
+        top: 6px;
+        left: 6px;
+    }
+    .pp-midia__info {
+        padding: 3px 8px;
+    }
+    .pp-midia__legenda {
+        font-size: 0.68rem;
+        line-height: 1.25;
+    }
+    .pp-midia__meta {
+        font-size: 0.63rem;
+    }
 }
 
 .pp__titulo { margin: 0 0 4px; font-size: 0.98rem; font-weight: 700; color: var(--navy); line-height: 1.3; }
@@ -1355,10 +1481,10 @@ body.gaveta-aberta .gaveta {
         margin: 10px 12px;
     }
     .pp--com-midia { display: flex; flex-direction: column-reverse; gap: 10px; height: auto; }
-    .pp__col-texto { height: auto; max-height: 200px; }
+    .pp__col-texto { width: 100%; min-width: 0; max-width: 100%; height: auto; max-height: 200px; padding-right: 0; }
     .pp-midia,
-    .pp-carrossel { height: 240px; }
-    .pp-midia__moldura { height: auto; flex: 1; min-height: 150px; }
+    .pp-carrossel { height: 270px; }
+    .pp-midia__moldura { height: auto; flex: 1; min-height: 140px; }
     .pp-midia__img { height: 100%; max-height: 100%; }
     .gaveta {
         position: absolute;
