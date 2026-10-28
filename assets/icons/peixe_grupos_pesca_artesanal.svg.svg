@@ -6,6 +6,12 @@
   <title>Grupos de pesca artesanal</title>
   <desc>Peixe de perfil para uso como marcador cartográfico no QGIS.</desc>
 
+  <defs>
+    <filter id="sombra-peixe" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.8" flood-color="#020617" flood-opacity="0.75"/>
+    </filter>
+  </defs>
+
   <!-- Corpo e cauda em uma única silhueta, legível mesmo em tamanho pequeno. -->
   <path
     d="M61 6
@@ -17,10 +23,12 @@
        C50 27 55 31 61 34
        C59 28 58 24 58 20
        C58 16 59 12 61 6 Z"
-    fill="#173B57"
-    stroke="#FFFFFF"
+    fill="#1d4ed8"
+    stroke="#091526"
+    stroke-opacity="0.88"
     stroke-width="2.4"
-    stroke-linejoin="round"/>
+    stroke-linejoin="round"
+    filter="url(#sombra-peixe)"/>
 
   <!-- Olho simples, com alto contraste. -->
   <circle cx="17" cy="17" r="2.2"

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="vendor/leaflet.markercluster-1.5.3/MarkerCluster.css">
 
     <!-- CSS do geoportal -->
-    <link rel="stylesheet" href="css/style.css?v=20261026-v15">
+    <link rel="stylesheet" href="css/style.css?v=20261027-v40">
 </head>
 
 <body>
@@ -73,6 +73,23 @@
 
         <!-- Fundo semitransparente (backdrop de referência) -->
         <div id="modal-backdrop" class="modal-backdrop" hidden></div>
+
+        <!-- Gaveta lateral direita de feição (substitui os popups do Leaflet) -->
+        <aside id="gaveta-feicao" class="gaveta-feicao" role="dialog" aria-modal="false"
+            aria-labelledby="gaveta-feicao-titulo" aria-hidden="true">
+            <header class="gaveta-feicao__topo">
+                <h2 id="gaveta-feicao-titulo" class="gaveta-feicao__titulo">Informações</h2>
+                <button id="gaveta-feicao-fechar" class="gaveta-feicao__fechar" type="button"
+                    aria-label="Fechar painel de informações" title="Fechar (Esc)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </header>
+            <div id="gaveta-feicao-corpo" class="gaveta-feicao__corpo"></div>
+        </aside>
 
         <!-- Gaveta institucional lateral direita (experimental — substitui a apresentação central) -->
         <!-- Referência recuperável: para restaurar a apresentação em modal central, consulte a folha css/style.css -->
@@ -245,7 +262,7 @@
     <script src="vendor/leaflet.markercluster-1.5.3/leaflet.markercluster.js"></script>
 
     <!-- Código do geoportal (módulos ES) -->
-    <script type="module" src="js/main.js?v=20261026-v15"></script>
+    <script type="module" src="js/main.js?v=20261027-v40"></script>
 </body>
 
 </html>

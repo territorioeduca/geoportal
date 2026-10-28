@@ -3,6 +3,6 @@
 "name": "sede_iemc2",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
-{ "type": "Feature", "properties": { "nome": "IEMC²", "nome_completo": "Instituto de Ecologização de Mares, Campo e Cidades para o Combate à Fome e à Pobreza", "tipo": "Sede institucional", "instituicao": "Universidade Federal de Santa Catarina - UFSC", "local": "Fazenda Ressacada, Tapera, Florianópolis - SC", "fonte": "Reitoria da UFSC", "fonte_url": "https://reitoria.ufsc.br/2026/06/24/ufsc-inaugura-instituto-de-ecologizacao-de-mares-campo-e-cidades-para-combate-a-fome-e-pobreza/" }, "geometry": { "type": "Point", "coordinates": [ -48.549472116679652, -27.686332053027922 ] } }
+{ "type": "Feature", "properties": { "nome": "IEMC²", "nome_completo": "Instituto de Ecologização de Mares, Campo e Cidades para o Combate à Fome e à Pobreza", "tipo": "Sede institucional", "instituicao": "Universidade Federal de Santa Catarina - UFSC", "local": "Fazenda Ressacada, Tapera, Florianópolis - SC", "fonte": "Reitoria da UFSC", "fonte_url": "https://reitoria.ufsc.br/2026/06/24/ufsc-inaugura-instituto-de-ecologizacao-de-mares-campo-e-cidades-para-combate-a-fome-e-pobreza/", "imagem": "imagens/iemc2_01.jpg;imagens/iemc2_02.jpg", "credito_imagem": "Paulo Horta", "data_imagem": "agosto de 2026" }, "geometry": { "type": "Point", "coordinates": [ -48.549472116679652, -27.686332053027922 ] } }
 ]
 }

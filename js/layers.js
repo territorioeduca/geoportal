@@ -5,7 +5,8 @@
 // Nenhuma geometria é alterada: clusters e máscara são só visuais.
 // ============================================================
 
-import { POPUPS } from "./popups.js?v=20261026-v15";
+import { POPUPS } from "./popups.js?v=20261027-v40";
+import { abrirGavetaFeicao } from "./gaveta.js?v=20261027-v40";
 
 const SENTINELA_VAZIO = "__vazio__";
 
@@ -25,11 +26,11 @@ const COR = {
     monumentos: "#D88335"
 };
 
-const ICONE_ESCOLA = "assets/icons/simbolo_escola_capelo_laranja.svg";
-const ICONE_PESCA = "assets/icons/peixe_grupos_pesca_artesanal.svg.svg";
-const ICONE_GOJ_TA_SA = "assets/icons/marcador_cultural_goj_ta_sa.svg";
-const ICONE_MUTUCA = "assets/icons/marcador_pegadas_mutuca.svg";
-const ICONE_MONUMENTOS = "assets/icons/marcador_monumentos_artisticos.svg";
+const ICONE_ESCOLA = "assets/icons/simbolo_escola_capelo_laranja.svg?v=20261027-v40";
+const ICONE_PESCA = "assets/icons/peixe_grupos_pesca_artesanal.svg.svg?v=20261027-v40";
+const ICONE_GOJ_TA_SA = "assets/icons/marcador_cultural_goj_ta_sa.svg?v=20261027-v40";
+const ICONE_MUTUCA = "assets/icons/marcador_pegadas_mutuca.svg?v=20261027-v40";
+const ICONE_MONUMENTOS = "assets/icons/marcador_monumentos_artisticos.svg?v=20261027-v40";
 
 // ------------------------------------------------------------
 // Panes (ordem de empilhamento, de baixo para cima)
@@ -104,7 +105,7 @@ export const CAMADAS = {
         tipo: "ponto-icone",
         icone: { url: ICONE_ESCOLA, tamanho: [28, 28] },
         titleMarcador: p => p.nome,
-        cluster: { classe: "cluster--edu", raio: 16 },
+        cluster: { classe: "cluster--edu", raio: 60 },
         legenda: { forma: "icone", src: ICONE_ESCOLA },
         filtros: [
             { campo: "rede", rotulo: "Rede" }
@@ -116,9 +117,13 @@ export const CAMADAS = {
         titulo: "Grupos de pescadores",
         arquivo: "pesca_artesanal_sul.geojson",
         tipo: "ponto-icone",
-        icone: { url: ICONE_PESCA, tamanho: [28, 18] },
+        icone: {
+            url: ICONE_PESCA,
+            tamanho: [28, 18],
+            ancoraFeicao: p => p && p.localidade === "Tapera" ? [34, 36] : null
+        },
         titleMarcador: p => `${p.descricao || "Grupo de pescadores"}${p.localidade ? " — " + p.localidade : ""}`,
-        cluster: { classe: "cluster--pesca", raio: 16 },
+        cluster: { classe: "cluster--pesca", raio: 60 },
         legenda: { forma: "icone", src: ICONE_PESCA },
         filtros: [
             // Localidades exibidas exatamente como estão nos dados (sem normalização).
@@ -200,7 +205,7 @@ export const CAMADAS = {
         titulo: "Ponto de Cultura Indígena Goj Tá Sá",
         arquivo: "territorio_indigena_goj_ta_sa.geojson",
         tipo: "ponto-icone",
-        icone: { url: ICONE_GOJ_TA_SA, tamanho: [28, 31], ancora: [14, 31], popupAncora: [0, -30] },
+        icone: { url: ICONE_GOJ_TA_SA, tamanho: [28, 31], ancora: [16, 36], popupAncora: [0, -34] },
         titleMarcador: p => p.nome,
         legenda: { forma: "icone", src: ICONE_GOJ_TA_SA },
         ligadaInicialmente: true
@@ -210,7 +215,7 @@ export const CAMADAS = {
         titulo: "Roteiro Ecopedagógico da Mutuca",
         arquivo: "trilha_ecopedagogica_mutuca.geojson",
         tipo: "ponto-icone",
-        icone: { url: ICONE_MUTUCA, tamanho: [28, 31], ancora: [23, 31], popupAncora: [-9, -30] },
+        icone: { url: ICONE_MUTUCA, tamanho: [28, 31], ancora: [27, 36], popupAncora: [-11, -34] },
         titleMarcador: p => p.nome,
         legenda: { forma: "icone", src: ICONE_MUTUCA },
         ligadaInicialmente: true
@@ -220,9 +225,9 @@ export const CAMADAS = {
         titulo: "Monumentos artísticos",
         arquivo: "monumentos_artisticos.geojson",
         tipo: "ponto-icone",
-        icone: { url: ICONE_MONUMENTOS, tamanho: [28, 31], ancora: [5, 31], popupAncora: [9, -30] },
+        icone: { url: ICONE_MONUMENTOS, tamanho: [28, 31], ancora: [3, 36], popupAncora: [13, -34] },
         titleMarcador: p => p.nome,
-        cluster: { classe: "cluster--monumentos", raio: 16 },
+        cluster: { classe: "cluster--monumentos", raio: 60 },
         legenda: { forma: "icone", src: ICONE_MONUMENTOS },
         filtros: [
             { campo: "nome", rotulo: "Monumento" }
@@ -333,18 +338,10 @@ function construirCamada(def, geojson) {
     const onEachFeature = (feature, layer) => {
         const gerar = POPUPS[def.id];
         if (gerar) {
-            const temMidia = Boolean(feature.properties && feature.properties.imagem);
-            layer.bindPopup(() => gerar(feature.properties), {
-                minWidth: temMidia ? 320 : 260,
-                maxWidth: temMidia ? 820 : 380,
-                className: temMidia ? "popup-te popup-te--amplo" : "popup-te",
-                autoPan: true,
-                autoPanPaddingTopLeft: L.point(20, 56),
-                autoPanPaddingBottomRight: L.point(20, 24),
-                keepInView: true,
-                closeOnEscapeKey: true,
-                autoClose: true,
-                closeOnClick: true
+            // Sem popup nativo: o mesmo conteúdo (gerar) é injetado na gaveta lateral direita.
+            layer.on("click", e => {
+                const origem = layer.getElement ? layer.getElement() : null;
+                abrirGavetaFeicao(gerar(feature.properties), origem);
             });
         }
     };
@@ -359,41 +356,50 @@ function construirCamada(def, geojson) {
     } else if (def.tipo === "ponto-circulo") {
         rt.grupo = L.geoJSON(null, {
             pointToLayer: (f, latlng) => L.circleMarker(latlng, {
-                pane: "pontos", radius: 7, weight: 3,
-                color: "#FFFFFF", opacity: 0.55,
+                pane: "pontos", radius: 7, weight: 2,
+                color: "#0f172a", opacity: 0.82,
                 fillColor: COR.sede, fillOpacity: 1,
                 bubblingMouseEvents: false
             }),
             onEachFeature
         });
     } else {
-        const icone = L.icon({
-            iconUrl: def.icone.url,
-            iconSize: def.icone.tamanho,
-            iconAnchor: def.icone.ancora || [def.icone.tamanho[0] / 2, def.icone.tamanho[1] / 2],
-            popupAnchor: def.icone.popupAncora || [0, -def.icone.tamanho[1] / 2]
+        const tamanhoPin = [32, 38];
+        const criarIcone = (ancoraCustom) => L.divIcon({
+            className: `map-pin map-pin--${def.id}`,
+            html: `<div class="map-pin__corpo"><img class="map-pin__img" src="${def.icone.url}" alt="" aria-hidden="true"></div>`,
+            iconSize: tamanhoPin,
+            iconAnchor: ancoraCustom || def.icone.ancora || [16, 36],
+            popupAnchor: def.icone.popupAncora || [0, -34]
         });
+        const iconePadrao = criarIcone();
         rt.fabricaPontos = dados => L.geoJSON(dados, {
-            pointToLayer: (f, latlng) => L.marker(latlng, {
-                icon: icone,
-                keyboard: true,
-                title: def.titleMarcador ? def.titleMarcador(f.properties) : "",
-                bubblingMouseEvents: false
-            }),
+            pointToLayer: (f, latlng) => {
+                const ancoraFeicao = typeof def.icone.ancoraFeicao === "function"
+                    ? def.icone.ancoraFeicao(f.properties)
+                    : null;
+                return L.marker(latlng, {
+                    icon: ancoraFeicao ? criarIcone(ancoraFeicao) : iconePadrao,
+                    keyboard: true,
+                    title: def.titleMarcador ? def.titleMarcador(f.properties) : "",
+                    bubblingMouseEvents: false
+                });
+            },
             onEachFeature
         });
         if (def.cluster) {
             // Agrupamento/spiderfy apenas na interface; coordenadas intactas.
             rt.grupo = L.markerClusterGroup({
-                maxClusterRadius: def.cluster.raio,
+                maxClusterRadius: def.cluster.raio || 60,
                 showCoverageOnHover: false,
                 spiderfyOnMaxZoom: true,
                 zoomToBoundsOnClick: true,
-                spiderLegPolylineOptions: { weight: 1.5, color: "#FFFFFF", opacity: 0.85 },
+                spiderLegPolylineOptions: { weight: 1.5, color: "#0f172a", opacity: 0.85 },
                 iconCreateFunction: c => L.divIcon({
-                    html: `<span>${c.getChildCount()}</span>`,
+                    html: `<div class="cluster-content"><img class="cluster-content__img" src="${def.icone.url}" alt="" aria-hidden="true"><span>${c.getChildCount()}</span></div>`,
                     className: `cluster ${def.cluster.classe}`,
-                    iconSize: [20, 20]
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18]
                 })
             });
         } else {
@@ -429,7 +435,7 @@ function renderizar(rt, feats) {
 // Carregamento
 // ------------------------------------------------------------
 async function buscarJson(arquivo) {
-    const resp = await fetch(`data/${arquivo}?v=20261026-v15`, { cache: "no-store" });
+    const resp = await fetch(`data/${arquivo}?v=20261027-v23`, { cache: "no-store" });
     if (!resp.ok) throw new Error(`Falha ao carregar ${arquivo} (HTTP ${resp.status})`);
     return resp.json();
 }

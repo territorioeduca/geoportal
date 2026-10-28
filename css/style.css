@@ -1508,3 +1508,1599 @@ body.gaveta-aberta .gaveta {
 @media (prefers-reduced-motion: reduce) {
     .painel, .btn-painel, .btn-painel__seta, .camada, .opcao, .nav__item, .modal__fechar, .gaveta, .gaveta__fechar, .leaflet-top.leaflet-right { transition: none !important; }
 }
+
+
+/* ============================================================
+   Gaveta lateral de feição (slide-over à direita) — substitui os popups.
+   Equivalente em CSS puro (o projeto não usa build/Tailwind) a:
+   absolute top-0 right-0 h-full w-full md:w-1/3 max-w-md bg-white shadow-2xl
+   transform transition-transform duration-300 translate-x-full → translate-x-0
+   ============================================================ */
+.gaveta-feicao {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    background: #ffffff;
+    box-shadow: -8px 0 32px rgba(15, 23, 42, 0.22);
+    border-left: 1px solid var(--linha);
+    z-index: 1250;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--fonte);
+    color: var(--tinta);
+    transform: translateX(100%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
+}
+
+.gaveta-feicao--aberta {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition: transform 0.3s ease-in-out, visibility 0s linear 0s;
+}
+
+@media (min-width: 801px) {
+    .gaveta-feicao {
+        width: clamp(360px, 33.333vw, 448px);
+    }
+    /* Controles do Leaflet acompanham a gaveta, sem ficarem escondidos atrás dela */
+    body.gaveta-feicao-aberta .leaflet-right {
+        right: clamp(360px, 33.333vw, 448px);
+    }
+}
+
+.gaveta-feicao__topo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 14px 12px 20px;
+    background: #F8FAFC;
+    border-bottom: 1px solid var(--linha);
+}
+
+.gaveta-feicao__titulo {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+    padding-top: 4px;
+    overflow-wrap: break-word;
+    min-width: 0;
+}
+
+.gaveta-feicao__fechar {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: var(--navy);
+    border: 1px solid var(--linha-forte);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.gaveta-feicao__fechar:hover {
+    background: var(--navy);
+    color: #ffffff;
+    border-color: var(--navy);
+}
+
+.gaveta-feicao__corpo {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px 20px 28px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
+}
+
+/* Conteúdo reaproveitado dos popups: coluna única, foto no topo e texto abaixo */
+.gaveta-feicao .pp--com-midia {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+}
+
+.gaveta-feicao .pp__col-midia {
+    order: -1;
+    flex: 0 0 auto;
+    height: clamp(240px, 42vh, 360px);
+    max-height: none;
+}
+
+.gaveta-feicao .pp__col-texto {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+}
+
+.gaveta-feicao .pp__sub {
+    margin-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gaveta-feicao, .gaveta-feicao--aberta { transition: none; }
+}
+
+
+/* ============================================================
+   ETAPA 2 — Painel de camadas moderno (CSS puro)
+   Cartão flutuante em vidro, toggle switches, acordeão e opacidade.
+   ============================================================ */
+
+/* ---------- 1. Painel flutuante (desktop) ---------- */
+@media (min-width: 801px) {
+    .painel {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        bottom: auto;
+        max-height: calc(100% - 24px);
+        flex: none;
+        width: var(--largura-painel);
+        background: rgba(255, 255, 255, 0.9);
+        -webkit-backdrop-filter: blur(12px) saturate(1.2);
+        backdrop-filter: blur(12px) saturate(1.2);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-left: 0;
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, visibility 0s linear 0s;
+    }
+
+    /* Recolhido: desliza para fora da tela, incluindo a margem flutuante */
+    .painel-oculto .painel {
+        margin-left: 0;
+        transform: translateX(calc(-100% - 24px));
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
+    }
+
+    .painel__conteudo {
+        padding: 14px 14px 18px;
+    }
+}
+
+/* Sem backdrop-filter, o fundo fica um pouco mais opaco para manter a leitura */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    @media (min-width: 801px) {
+        .painel { background: rgba(255, 255, 255, 0.97); }
+    }
+}
+
+/* ---------- 2. Toggle switches no lugar dos checkboxes ---------- */
+/* Mantém o input na árvore de acessibilidade (foco e teclado), mas invisível */
+.camada input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    pointer-events: none;
+}
+
+.camada {
+    position: relative;
+}
+
+.camada__rotulo {
+    position: relative;
+    padding-right: 48px;
+    min-height: 26px;
+}
+
+/* Trilho */
+.camada__rotulo::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 38px;
+    height: 22px;
+    margin-top: -11px;
+    border-radius: 9999px;
+    background: #CBD5E1;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.15);
+    transition: background-color 0.2s ease;
+}
+
+/* Bolinha branca */
+.camada__rotulo::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    right: 18px;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.35);
+    transition: right 0.2s ease;
+}
+
+.camada input[type="checkbox"]:checked + .camada__rotulo::after {
+    background: var(--teal);
+}
+
+.camada input[type="checkbox"]:checked + .camada__rotulo::before {
+    right: 2px;
+}
+
+.camada input[type="checkbox"]:focus-visible + .camada__rotulo::after {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+/* ---------- 3. Acordeão das categorias ---------- */
+.grupo__cab {
+    margin: 0;
+    padding: 0;
+}
+
+.grupo__toggle {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--fonte);
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+    transition: background-color 0.15s ease;
+}
+
+.grupo__toggle:hover {
+    background-color: var(--fundo-hover);
+}
+
+.grupo__toggle:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: -2px;
+}
+
+/* Chevron */
+.grupo__toggle::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    border-right: 2px solid var(--tinta-suave);
+    border-bottom: 2px solid var(--tinta-suave);
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.25s ease, border-color 0.15s ease;
+}
+
+.grupo--aberto > .grupo__cab .grupo__toggle::after {
+    transform: rotate(-135deg) translateY(-2px);
+    border-color: var(--teal);
+}
+
+/* Expansão suave sem precisar conhecer a altura do conteúdo */
+.grupo__corpo {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+}
+
+.grupo--aberto > .grupo__corpo {
+    grid-template-rows: 1fr;
+}
+
+.grupo__interno {
+    min-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    padding-top: 2px;
+    transition: visibility 0s linear 0.28s;
+}
+
+.grupo--aberto > .grupo__corpo > .grupo__interno {
+    visibility: visible;
+    transition: visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grupo__corpo, .grupo__toggle::after, .camada__rotulo::before, .camada__rotulo::after { transition: none; }
+}
+
+
+/* ============================================================
+   ETAPAS 3 E 4 — Tipografia da gaveta, carrossel, cabeçalho
+   flutuante e controles de zoom (CSS puro)
+   ============================================================ */
+
+/* ---------- Variáveis do cabeçalho flutuante ---------- */
+:root {
+    --topo-margem: 12px;
+    --topo-altura: 52px;
+    /* Espaço que o cabeçalho flutuante ocupa sobre o mapa (margem + barra + respiro) */
+    --topo-ocupado: calc(var(--topo-margem) * 2 + var(--topo-altura));
+}
+
+@media (max-width: 800px) {
+    :root {
+        --topo-margem: 8px;
+        --topo-altura: 50px;
+    }
+}
+
+/* ---------- 1. Cabeçalho flutuante (floating navbar) ---------- */
+.topo {
+    position: absolute;
+    top: var(--topo-margem);
+    left: var(--topo-margem);
+    right: var(--topo-margem);
+    height: var(--topo-altura);
+    min-height: 0;
+    padding: 0 16px;
+    border-radius: 14px;
+    background: rgba(30, 41, 59, 0.94);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    backdrop-filter: blur(10px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25), 0 1px 3px rgba(15, 23, 42, 0.2);
+}
+
+@media (max-width: 800px) {
+    .topo {
+        padding: 0 10px;
+        border-radius: 12px;
+    }
+}
+
+/* O mapa passa a ocupar a área toda, por trás do cabeçalho */
+.corpo {
+    flex: 1 1 auto;
+}
+
+/* Painéis e gavetas começam abaixo do cabeçalho, sem ficarem cobertos por ele */
+@media (min-width: 801px) {
+    .painel {
+        top: var(--topo-ocupado);
+        max-height: calc(100% - var(--topo-ocupado) - var(--topo-margem));
+    }
+}
+
+@media (max-width: 800px) {
+    .painel {
+        top: var(--topo-ocupado);
+    }
+}
+
+.gaveta,
+.gaveta-feicao {
+    top: var(--topo-ocupado);
+}
+
+/* Controles do Leaflet (canto superior) abaixo do cabeçalho */
+.leaflet-top {
+    top: var(--topo-ocupado);
+}
+
+.leaflet-top.leaflet-right .leaflet-control-zoom {
+    margin-top: 0;
+}
+
+/* ---------- 2. Botões de zoom do Leaflet ---------- */
+.leaflet-bar.leaflet-control-zoom {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.leaflet-bar.leaflet-control-zoom a,
+.leaflet-touch .leaflet-bar.leaflet-control-zoom a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    line-height: 1;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--navy);
+    font-family: var(--fonte);
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.leaflet-bar.leaflet-control-zoom a:last-child,
+.leaflet-touch .leaflet-bar.leaflet-control-zoom a:last-child {
+    margin-bottom: 0;
+}
+
+.leaflet-bar.leaflet-control-zoom a:hover,
+.leaflet-touch .leaflet-bar.leaflet-control-zoom a:hover {
+    background: #F1F5F9;
+    color: var(--teal-dark);
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.25);
+}
+
+.leaflet-bar.leaflet-control-zoom a.leaflet-disabled {
+    background: #F8FAFC;
+    color: #CBD5E1;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
+    cursor: default;
+}
+
+/* ---------- 3. Gaveta de feição: badge, grade tipográfica e carrossel ---------- */
+
+/* Subtítulo (ex.: "Monumento artístico") como badge em pílula */
+.gaveta-feicao .pp__sub {
+    display: inline-block;
+    margin: 0 0 4px;
+    padding: 3px 11px;
+    border-radius: 999px;
+    background: rgba(13, 148, 136, 0.12);
+    color: #115E59;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+}
+
+/* Rótulos e valores em grade vertical, com mais respiro */
+.gaveta-feicao .pp__lista {
+    display: block;
+    margin: 6px 0 0;
+}
+
+.gaveta-feicao .pp__lista dt {
+    display: block;
+    margin-top: 16px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+}
+
+.gaveta-feicao .pp__lista dt:first-child {
+    margin-top: 8px;
+}
+
+.gaveta-feicao .pp__lista dt::after {
+    content: none;
+}
+
+.gaveta-feicao .pp__lista dd {
+    display: block;
+    margin: 3px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--tinta);
+}
+
+.gaveta-feicao .pp__lista dd::after {
+    content: none;
+}
+
+.gaveta-feicao .pp__nota {
+    line-height: 1.6;
+}
+
+/* Carrossel: imagem com cantos arredondados */
+.gaveta-feicao .pp-midia,
+.gaveta-feicao .pp-carrossel {
+    border-radius: 12px;
+}
+
+.gaveta-feicao .pp-midia__moldura {
+    padding: 6px;
+}
+
+.gaveta-feicao .pp-midia__img {
+    border-radius: 8px;
+}
+
+/* Setas: botões circulares escuros translúcidos sobre a imagem */
+.pp-carrossel__seta {
+    width: 38px;
+    height: 38px;
+    background: rgba(15, 23, 42, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.pp-carrossel__seta:hover {
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+.pp-carrossel__seta--esq {
+    left: 12px;
+}
+
+.pp-carrossel__seta--dir {
+    right: 12px;
+}
+
+/* ============================================================
+   ETAPA 5 — Lightbox (Visualizador de Imagem em Tela Cheia)
+   ============================================================ */
+
+/* Indicador visual de ampliação nas fotos do carrossel e mídia única */
+.gaveta-feicao .pp-midia__img,
+.pp-midia__img {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+
+/* Container de tela cheia (Glassmorphism escuro) */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    cursor: zoom-out;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.lightbox.lightbox--aberto {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Imagem centralizada em alta legibilidade */
+.lightbox__img {
+    display: block;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    cursor: default;
+    user-select: none;
+    transform: scale(0.96);
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lightbox.lightbox--aberto .lightbox__img {
+    transform: scale(1);
+}
+
+/* Botão de fechar ("X") no canto superior direito */
+.lightbox__fechar {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.65);
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.lightbox__fechar:hover,
+.lightbox__fechar:focus-visible {
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(255, 255, 255, 0.85);
+    transform: scale(1.05);
+    outline: none;
+}
+
+/* ============================================================
+   ETAPA 6 E ETAPA 7 — Pinos Temáticos (.map-pin), Super Clusters
+   Brilhantes (.cluster-content) e Rodapé de Atribuição
+   ============================================================ */
+
+/* Limpeza do rodapé de atribuições do Leaflet (.leaflet-control-attribution) */
+.leaflet-container .leaflet-control-attribution {
+    background: rgba(255, 255, 255, 0.6) !important;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    font-family: var(--fonte);
+    font-size: 10px !important;
+    line-height: 1.35;
+    color: #334155;
+    border: none !important;
+    border-radius: 6px 0 0 0;
+    padding: 2px 8px;
+    box-shadow: none !important;
+}
+
+.leaflet-container .leaflet-control-attribution a {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.leaflet-container .leaflet-control-attribution a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- 1. Pinos Individuais Temáticos (.map-pin) ---------- */
+.map-pin {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 32px;
+    height: 38px;
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    filter: drop-shadow(0 2px 5px rgba(2, 6, 23, 0.65));
+}
+
+/* Formato de pino em gota (teardrop) com borda sombreada escura */
+.map-pin__corpo {
+    width: 30px;
+    height: 30px;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+    border: 1.8px solid rgba(10, 15, 28, 0.82);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    box-sizing: border-box;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Hover aplicado em .map-pin__corpo para preservar o translate3d do Leaflet em .map-pin */
+.map-pin:hover .map-pin__corpo {
+    transform: rotate(-45deg) scale(1.1);
+}
+
+/* Ícone interno desrotacionado (+45deg) para ficar na vertical dentro da gota */
+.map-pin__img {
+    width: 17px;
+    height: 17px;
+    object-fit: contain;
+    display: block;
+    transform: rotate(45deg);
+    filter: brightness(0) invert(1);
+    pointer-events: none;
+}
+
+/* SVGs que já possuem formato e contorno sombreado escuro próprios
+   (monumentos, goj_ta_sa, trilha_mutuca, pesca, instituicoes): renderiza o SVG
+   inteiro sem moldura de gota externa, idêntico à legenda e ao ícone do cluster */
+.map-pin--monumentos .map-pin__corpo,
+.map-pin--goj_ta_sa .map-pin__corpo,
+.map-pin--trilha_mutuca .map-pin__corpo,
+.map-pin--pesca .map-pin__corpo,
+.map-pin--instituicoes .map-pin__corpo {
+    width: 32px;
+    height: 36px;
+    margin-top: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+}
+
+.map-pin--monumentos:hover .map-pin__corpo,
+.map-pin--goj_ta_sa:hover .map-pin__corpo,
+.map-pin--trilha_mutuca:hover .map-pin__corpo,
+.map-pin--pesca:hover .map-pin__corpo,
+.map-pin--instituicoes:hover .map-pin__corpo {
+    transform: scale(1.12);
+}
+
+.map-pin--monumentos .map-pin__img,
+.map-pin--goj_ta_sa .map-pin__img,
+.map-pin--trilha_mutuca .map-pin__img,
+.map-pin--pesca .map-pin__img,
+.map-pin--instituicoes .map-pin__img {
+    width: 32px;
+    height: 36px;
+    clip-path: none;
+    transform: none;
+    filter: none;
+}
+
+/* Monumentos Artísticos: Verde-petróleo / Teal (#0d9488) idêntico à legenda */
+.map-pin--monumentos .map-pin__img {
+    filter: hue-rotate(142deg) saturate(1.25) brightness(0.95);
+}
+
+/* Roteiro Ecopedagógico da Mutuca: Verde-bandeira (#15803d) idêntico à legenda */
+.map-pin--trilha_mutuca .map-pin__img {
+    filter: hue-rotate(-12deg) saturate(1.5) brightness(0.92);
+}
+
+/* Pesca Artesanal: símbolo do peixe idêntico ao da legenda e ao do cluster */
+.map-pin--pesca {
+    align-items: center;
+}
+
+.map-pin--pesca .map-pin__corpo {
+    width: 28px;
+    height: 20px;
+}
+
+.map-pin--pesca .map-pin__img {
+    width: 28px;
+    height: 18px;
+    filter: none;
+}
+
+/* Educação / Escolas: símbolo do capelo laranja idêntico ao da legenda e ao do cluster */
+.map-pin--instituicoes {
+    align-items: center;
+}
+
+.map-pin--instituicoes .map-pin__corpo {
+    width: 28px;
+    height: 28px;
+}
+
+.map-pin--instituicoes .map-pin__img {
+    width: 28px;
+    height: 28px;
+    filter: hue-rotate(-6deg) saturate(1.15);
+}
+
+/* ---------- 2. Super Clusters Circulares Compactos (34x34 + Borda Sombreada Escura) ---------- */
+.cluster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+}
+
+.cluster-content {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 1px;
+    border-radius: 50%;
+    background: #ea580c;
+    border: 1.8px solid rgba(10, 15, 28, 0.85);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    font-family: var(--fonte);
+    font-weight: 800;
+    font-size: 10.5px;
+    line-height: 1;
+    white-space: nowrap;
+    box-sizing: border-box;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cluster-content:hover {
+    transform: scale(1.08);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.72), 0 0 0 1.5px rgba(0, 0, 0, 0.45);
+}
+
+/* Miniatura do ícone dentro do cluster */
+.cluster-content__img,
+.cluster-content img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+    filter: none;
+    pointer-events: none;
+}
+
+/* Pesca no cluster: peixe ampliado ao lado do número */
+.cluster--pesca .cluster-content__img,
+.cluster--pesca .cluster-content img {
+    width: 21px;
+    height: 15px;
+    margin-left: -1px;
+    filter: none;
+}
+
+/* Escolas no cluster: capelo ampliado ao lado do número */
+.cluster--edu .cluster-content__img,
+.cluster--edu .cluster-content img {
+    width: 22px;
+    height: 22px;
+    margin: -2px -2px -2px -3px;
+    filter: hue-rotate(-6deg) saturate(1.15);
+}
+
+/* Para o ícone de monumentos no cluster, amplia o símbolo branco interno */
+.cluster--monumentos .cluster-content__img,
+.cluster--monumentos .cluster-content img {
+    width: 31px;
+    height: 35px;
+    margin: -7px -5px -7px -6px;
+    filter: hue-rotate(142deg) saturate(1.25) brightness(0.95);
+    clip-path: circle(28% at 50% 38.5%);
+}
+
+/* Remove o estilo circular legado do span quando dentro de .cluster-content */
+.cluster .cluster-content span {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #ffffff;
+    font-family: var(--fonte);
+    font-weight: 800;
+    font-size: 10.5px;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* Cores Temáticas dos Clusters com Borda Sombreada Escura */
+/* 1. Educação: Laranja (#ea580c) */
+.cluster--edu .cluster-content {
+    background: #ea580c;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+/* 2. Monumentos Artísticos: Verde-petróleo / Teal (#0d9488) */
+.cluster--monumentos .cluster-content {
+    background: #0d9488;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+/* 3. Pesca Artesanal: Azul-marinho (#1e3a8a) */
+.cluster--pesca .cluster-content {
+    background: #1e3a8a;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+/* ---------- 3. Etapa 8: Sincronização dos Ícones da Legenda (Sidebar) ---------- */
+.sim__ponto,
+.sim--ponto {
+    border: 1.8px solid rgba(10, 15, 28, 0.85);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+/* Educação / Escolas: Laranja (#ea580c) */
+.sim--instituicoes.sim--icone img {
+    filter: hue-rotate(-6deg) saturate(1.15);
+}
+
+/* Pesca Artesanal: Azul-marinho com borda sombreada escura */
+.sim--pesca.sim--icone img {
+    filter: none;
+}
+
+/* Ampliação dos três pinos temáticos na coluna das camadas (Mutuca, Monumentos, Goj Tá Sá) */
+.sim--trilha_mutuca,
+.sim--monumentos,
+.sim--goj_ta_sa {
+    height: 29px;
+}
+
+.sim--trilha_mutuca.sim--icone img,
+.sim--monumentos.sim--icone img,
+.sim--goj_ta_sa.sim--icone img {
+    width: 26px;
+    height: 29px;
+    max-width: none;
+    max-height: 29px;
+}
+
+/* Monumentos Artísticos: converte o SVG laranja (#D88335) para Verde-petróleo / Teal (#0d9488) */
+.sim--monumentos.sim--icone img {
+    filter: hue-rotate(142deg) saturate(1.25) brightness(0.95);
+}
+
+/* Roteiro Ecopedagógico da Mutuca: Verde-bandeira (#15803d) */
+.sim--trilha_mutuca.sim--icone img {
+    filter: hue-rotate(-12deg) saturate(1.5) brightness(0.92);
+}
+
+/* ============================================================
+   ETAPA 9 — Refatoração da Gaveta Lateral (Layout Premium)
+   ============================================================ */
+
+/* 1. Container da Gaveta: fundo cinza/azul muito claro com glassmorphism */
+.gaveta-feicao {
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.96) 0%, rgba(226, 232, 240, 0.94) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+    backdrop-filter: blur(14px) saturate(1.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: -8px 0 30px rgba(15, 23, 42, 0.22);
+}
+
+@media (min-width: 801px) {
+    .gaveta-feicao {
+        right: 12px;
+        bottom: 12px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        overflow: hidden;
+        transform: translateX(calc(100% + 24px));
+    }
+
+    .gaveta-feicao--aberta {
+        transform: translateX(0);
+    }
+
+    body.gaveta-feicao-aberta .leaflet-right {
+        right: calc(clamp(360px, 33.333vw, 448px) + 16px);
+    }
+}
+
+/* 2. Cabeçalho Escuro com Gradiente (Título + Badge + Botão "X") */
+.gaveta-feicao__topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 18px 16px 16px 20px;
+    background: linear-gradient(to bottom, #1e293b, #0f172a);
+    border-bottom: none;
+    border-radius: 0 0 14px 14px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+}
+
+.gaveta-feicao__cab-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.gaveta-feicao__titulo {
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+}
+
+.gaveta-feicao__sub {
+    margin: 0;
+    padding: 0;
+    color: rgba(226, 232, 240, 0.88);
+    background: transparent;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.gaveta-feicao__sub[hidden] {
+    display: none !important;
+}
+
+.gaveta-feicao__fechar {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.gaveta-feicao__fechar:hover,
+.gaveta-feicao__fechar:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+    outline: none;
+}
+
+/* 3. Tipografia e Ordem do Corpo da Gaveta */
+.gaveta-feicao__corpo {
+    padding: 18px 20px 26px;
+}
+
+.gaveta-feicao .pp--com-midia {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.gaveta-feicao .pp__col-texto {
+    order: 1;
+}
+
+.gaveta-feicao .pp__col-midia {
+    order: 2;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+}
+
+.gaveta-feicao .pp__lista {
+    margin: 0;
+}
+
+.gaveta-feicao .pp__lista dt {
+    display: block;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #0f172a;
+}
+
+.gaveta-feicao .pp__lista dt:first-child {
+    margin-top: 0;
+}
+
+.gaveta-feicao .pp__lista dt::after {
+    content: ":";
+}
+
+.gaveta-feicao .pp__lista dd {
+    display: block;
+    margin: 2px 0 0;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: #1e293b;
+}
+
+/* 4. Carrossel de Imagens, Setas Translúcidas, Dots e Créditos */
+.gaveta-feicao .pp-midia,
+.gaveta-feicao .pp-carrossel {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+}
+
+.gaveta-feicao .pp-carrossel__slides,
+.gaveta-feicao .pp-carrossel__slide {
+    flex: none;
+    height: auto;
+    overflow: visible;
+}
+
+/* Palco horizontal: imagem principal arredondada + faixa "peek" da próxima foto à direita */
+.gaveta-feicao .pp-carrossel__palco {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    position: relative;
+}
+
+.gaveta-feicao .pp-midia__moldura {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    height: 196px;
+    padding: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+}
+
+.gaveta-feicao .pp-midia__img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+/* Placas educativas preenchem 100% do quadro arredondado sem recorte e sem barras escuras */
+.gaveta-feicao .pp-midia__img.pp-midia__img--placa {
+    object-fit: fill;
+}
+
+/* Faixa lateral direita com prévia ("peek") da próxima imagem do carrossel */
+.gaveta-feicao .pp-carrossel__peek {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 196px;
+    border-radius: 12px 6px 6px 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    cursor: pointer;
+    user-select: none;
+}
+
+.gaveta-feicao .pp-carrossel__peek-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    display: block;
+    pointer-events: none;
+}
+
+/* Setas circulares de navegação: '<' translúcida à esquerda e '>' sobre a divisão da prévia à direita */
+.gaveta-feicao .pp-carrossel__seta {
+    top: 98px;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: #ffffff;
+    border: none;
+}
+
+.gaveta-feicao .pp-carrossel__seta svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.2;
+}
+
+.gaveta-feicao .pp-carrossel__seta--esq {
+    left: 10px;
+    background: rgba(30, 41, 59, 0.48);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.22);
+}
+
+.gaveta-feicao .pp-carrossel__seta--dir {
+    right: 11px;
+    background: rgba(30, 41, 59, 0.86);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.32);
+}
+
+.gaveta-feicao .pp-carrossel__seta:hover {
+    background: rgba(15, 23, 42, 0.94);
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.07);
+}
+
+/* Oculta o contador antigo no canto superior da foto pois agora há dots abaixo */
+.gaveta-feicao .pp-carrossel__indicador {
+    display: none;
+}
+
+/* Pontos de paginação (dots) centralizados abaixo da imagem */
+.gaveta-feicao .pp-carrossel__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0 8px;
+    padding: 0;
+}
+
+.gaveta-feicao .pp-carrossel__dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #94a3b8;
+    opacity: 0.65;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.gaveta-feicao .pp-carrossel__dot:hover {
+    opacity: 0.9;
+}
+
+.gaveta-feicao .pp-carrossel__dot--ativo {
+    background: #0f172a;
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+/* Legenda opcional e créditos da foto abaixo dos dots */
+.gaveta-feicao .pp-midia__info {
+    background: transparent;
+    border-top: none;
+    padding: 4px 2px 0;
+    gap: 3px;
+}
+
+.gaveta-feicao .pp-midia__legenda {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #1e293b;
+    -webkit-line-clamp: 3;
+}
+
+.gaveta-feicao .pp-midia__meta {
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: #475569;
+    white-space: normal;
+}
+
+/* Setas de navegação do carrossel no Lightbox (zoom máximo) */
+.lightbox__seta {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100000;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(15, 23, 42, 0.72);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    transition: background-color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.lightbox__seta[hidden] {
+    display: none !important;
+}
+
+.lightbox__seta:hover {
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(255, 255, 255, 0.65);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.lightbox__seta:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.lightbox__seta--esq {
+    left: 24px;
+}
+
+.lightbox__seta--dir {
+    right: 24px;
+}
+
+@media (max-width: 640px) {
+    .lightbox__seta {
+        width: 40px;
+        height: 40px;
+        font-size: 1.35rem;
+    }
+
+    .lightbox__seta--esq {
+        left: 12px;
+    }
+
+    .lightbox__seta--dir {
+        right: 12px;
+    }
+}
+
+/* ============================================================
+   ETAPA 10 — Paleta de Cores do Layout (Painel Lateral em
+   Azul-Petróleo Escuro Translúcido, Toggle Ciano, Cabeçalho e
+   Gaveta Lateral com Vidro Gelo Azulado)
+   ============================================================ */
+
+/* 1. Barra Superior (.topo) colada nos limites da tela com gradiente azul-petróleo escuro */
+:root {
+    --topo-ocupado: calc(var(--topo-altura) + var(--topo-margem));
+}
+
+.topo {
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    background: linear-gradient(90deg, rgba(24, 42, 54, 0.94) 0%, rgba(19, 35, 49, 0.96) 55%, rgba(16, 30, 46, 0.98) 100%);
+    -webkit-backdrop-filter: blur(12px) saturate(1.25);
+    backdrop-filter: blur(12px) saturate(1.25);
+    border: none;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: 0 4px 16px rgba(10, 20, 35, 0.28);
+}
+
+@media (max-width: 800px) {
+    .topo {
+        border-radius: 0;
+    }
+}
+
+.btn-painel {
+    background: rgba(45, 68, 90, 0.52);
+    border: 1px solid rgba(148, 163, 184, 0.30);
+    color: #f8fafc;
+}
+
+.btn-painel:hover {
+    background: rgba(56, 84, 110, 0.75);
+    border-color: rgba(148, 163, 184, 0.48);
+}
+
+.btn-painel__icone {
+    color: #38bdf8;
+}
+
+.nav__item {
+    color: #cbd5e1;
+    border-radius: 7px;
+}
+
+.nav__item:hover {
+    background: rgba(54, 78, 104, 0.38);
+    color: #ffffff;
+    border-color: rgba(148, 163, 184, 0.24);
+}
+
+.nav__item--ativo {
+    background: rgba(54, 78, 104, 0.68);
+    border-color: rgba(148, 163, 184, 0.40);
+    color: #ffffff;
+}
+
+.nav__item--ativo:hover {
+    background: rgba(64, 92, 122, 0.80);
+    border-color: rgba(148, 163, 184, 0.52);
+    color: #ffffff;
+}
+
+/* 2. Painel Lateral Esquerdo (#painel) em vidro escuro azul-petróleo */
+.painel {
+    background: linear-gradient(180deg, rgba(24, 42, 54, 0.90) 0%, rgba(19, 34, 46, 0.93) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(1.25);
+    backdrop-filter: blur(14px) saturate(1.25);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+.painel::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.35);
+}
+
+.painel::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.55);
+}
+
+.painel .bloco {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.painel .bloco:last-child {
+    border-bottom: none;
+}
+
+.painel fieldset.bloco legend,
+.painel .bloco__titulo {
+    color: #e2e8f0;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+/* Opções de mapa-base no painel escuro */
+.painel .opcao {
+    border-radius: 6px;
+}
+
+.painel .opcao:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.painel .opcao label {
+    color: #cbd5e1;
+}
+
+.painel .opcao:hover label {
+    color: #ffffff;
+}
+
+.painel .opcao input {
+    accent-color: #22d3ee;
+}
+
+/* Cartões de grupos temáticos (acordeão) no painel escuro */
+.painel .grupo {
+    background: rgba(31, 51, 66, 0.62);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 10px;
+    padding: 4px 8px;
+    margin: 0 0 8px;
+}
+
+.painel .grupo:last-child {
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.painel .grupo--aberto {
+    background: rgba(33, 55, 71, 0.78);
+    border-color: rgba(148, 163, 184, 0.28);
+    padding-bottom: 8px;
+}
+
+.painel .grupo__toggle {
+    color: #f1f5f9;
+    padding: 6px 4px;
+}
+
+.painel .grupo__toggle:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.painel .grupo__toggle::after {
+    border-right-color: #94a3b8;
+    border-bottom-color: #94a3b8;
+}
+
+.painel .grupo--aberto > .grupo__cab .grupo__toggle::after {
+    border-color: #38bdf8;
+}
+
+/* Linhas de camadas e contadores no painel escuro */
+.painel .camada:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.painel .camada__rotulo {
+    color: #cbd5e1;
+}
+
+.painel .camada:hover .camada__rotulo {
+    color: #ffffff;
+}
+
+.painel .camada__n {
+    background: rgba(15, 23, 42, 0.48);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.20);
+}
+
+.painel .camada:hover .camada__n {
+    background: rgba(15, 23, 42, 0.68);
+    color: #e2e8f0;
+}
+
+/* Toggle switches luminosos em ciano/turquesa como no modelo */
+.painel .camada__rotulo::after {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+}
+
+.painel .camada__rotulo::before {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.painel .camada input[type="checkbox"]:checked + .camada__rotulo::after {
+    background: linear-gradient(90deg, #0891b2 0%, #22d3ee 100%);
+    border-color: rgba(103, 232, 249, 0.55);
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
+}
+
+/* Botões e controles de filtro no painel escuro */
+.painel .filtros {
+    margin: 6px 0 2px 4px;
+}
+
+.painel .filtros summary {
+    color: #e2e8f0;
+    background: rgba(45, 70, 92, 0.62);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 7px;
+    padding: 3px 12px;
+    font-size: 0.76rem;
+}
+
+.painel .filtros summary:hover {
+    background: rgba(56, 86, 112, 0.82);
+    color: #ffffff;
+}
+
+.painel .filtro label {
+    color: #94a3b8;
+}
+
+.painel .filtro select {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: #f1f5f9;
+}
+
+.painel .btn-link {
+    color: #38bdf8;
+}
+
+.painel .btn-link:hover {
+    color: #7dd3fc;
+}
+
+/* 3. Gaveta Lateral Direita (.gaveta-feicao) com fundo gelo-azulado e topo marinho */
+.gaveta-feicao {
+    background: linear-gradient(180deg, rgba(241, 245, 249, 0.95) 0%, rgba(224, 233, 242, 0.95) 100%);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.gaveta-feicao__topo {
+    background: linear-gradient(180deg, #2b3f54 0%, #172a3d 42%, #0f1e30 100%);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 4px 14px rgba(15, 23, 42, 0.20);
+}

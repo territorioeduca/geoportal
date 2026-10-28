@@ -331,10 +331,10 @@ export const POPUPS = {
         [
             texto("Tipo", p.tipo),
             texto("Instituição", p.instituicao),
-            texto("Local", p.local),
-            fonte("Fonte", p.fonte, p.fonte_url)
+            texto("Local", p.local)
         ],
-        "Ponto da sede institucional. Não representa área de atuação, abrangência ou influência territorial."
+        null,
+        montarMidia(p)
     ),
 
     instituicoes: p => popup(

@@ -8,7 +8,7 @@
 import {
     GRUPOS, CAMADAS, definirVisivel, valoresDoFiltro, aplicarFiltros,
     SENTINELA_VAZIO
-} from "./layers.js";
+} from "./layers.js?v=20261027-v40";
 
 function el(tag, atributos = {}, filhos = []) {
     const e = document.createElement(tag);
@@ -27,8 +27,10 @@ const novoId = prefixo => `${prefixo}-${++contadorId}`;
 // ------------------------------------------------------------
 // Símbolo de legenda
 // ------------------------------------------------------------
-function simbolo(leg) {
-    const s = el("span", { className: "sim", "aria-hidden": "true" });
+function simbolo(leg, idCamada = "") {
+    const classes = ["sim"];
+    if (idCamada) classes.push(`sim--${idCamada}`);
+    const s = el("span", { className: classes.join(" "), "aria-hidden": "true" });
     switch (leg.forma) {
         case "icone": {
             s.classList.add("sim--icone");
@@ -72,17 +74,43 @@ function simbolo(leg) {
 // ------------------------------------------------------------
 function construirCamadas(ctx, container) {
     const { map, estado } = ctx;
+    let indiceGrupo = 0;
 
     GRUPOS.forEach(grupo => {
         const ids = grupo.camadas.filter(id => estado[id]);
         if (!ids.length) return;
 
+        // Acordeão: apenas a primeira categoria começa aberta.
+        const aberto = indiceGrupo === 0;
+        indiceGrupo++;
+
         const idCab = novoId("grupo");
-        const secao = el("section", { className: "grupo", "aria-labelledby": idCab });
-        const cab = el("h3", { className: "grupo__cab", id: idCab }, [
-            el("span", { texto: grupo.nome })
-        ]);
+        const idCorpo = novoId("grupo-corpo");
+        const secao = el("section", {
+            className: aberto ? "grupo grupo--aberto" : "grupo",
+            "aria-labelledby": idCab
+        });
+        const botaoGrupo = el("button", {
+            type: "button",
+            className: "grupo__toggle",
+            "aria-expanded": String(aberto),
+            "aria-controls": idCorpo
+        }, [el("span", { className: "grupo__nome", texto: grupo.nome })]);
+        const cab = el("h3", { className: "grupo__cab", id: idCab }, [botaoGrupo]);
         secao.appendChild(cab);
+
+        const interno = el("div", { className: "grupo__interno" });
+        const corpoGrupo = el("div", { className: "grupo__corpo", id: idCorpo }, [interno]);
+        if (!aberto) interno.setAttribute("inert", "");
+        secao.appendChild(corpoGrupo);
+
+        botaoGrupo.addEventListener("click", () => {
+            const abrir = !secao.classList.contains("grupo--aberto");
+            secao.classList.toggle("grupo--aberto", abrir);
+            botaoGrupo.setAttribute("aria-expanded", String(abrir));
+            if (abrir) interno.removeAttribute("inert");
+            else interno.setAttribute("inert", "");
+        });
 
         ids.forEach(id => {
             const rt = estado[id];
@@ -92,11 +120,14 @@ function construirCamadas(ctx, container) {
             chk.checked = rt.visivel;
 
             const contagem = el("span", { className: "camada__n", texto: `(${rt.total})` });
-            const rotulo = el("label", { className: "camada__rotulo", for: idChk }, [
-                simbolo(def.legenda),
-                el("span", { className: "camada__titulo", texto: def.titulo }),
-                contagem
-            ]);
+            const filhosRotulo = [
+                simbolo(def.legenda, id),
+                el("span", { className: "camada__titulo", texto: def.titulo })
+            ];
+            if (grupo.id !== "ref") {
+                filhosRotulo.push(contagem);
+            }
+            const rotulo = el("label", { className: "camada__rotulo", for: idChk }, filhosRotulo);
             const item = el("div", { className: "camada" }, [chk, rotulo]);
             if (def.provisorio) {
                 item.appendChild(el("span", {
@@ -105,12 +136,13 @@ function construirCamadas(ctx, container) {
                     title: `Estilo provisório (${def.provisorio}); não é identidade visual aprovada.`
                 }));
             }
+
             chk.addEventListener("change", () => {
                 definirVisivel(map, estado, id, chk.checked);
             });
-            secao.appendChild(item);
+            interno.appendChild(item);
 
-            if (def.filtros) secao.appendChild(construirFiltros(rt, contagem));
+            if (def.filtros) interno.appendChild(construirFiltros(rt, contagem));
         });
 
         container.appendChild(secao);

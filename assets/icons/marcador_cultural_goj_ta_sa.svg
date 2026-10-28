@@ -2,13 +2,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="36" viewBox="0 0 32 36">
   <title>Ponto de Cultura Indígena Goj Tá Sá</title>
   <defs>
-    <filter id="sombra-roxo" x="-20%" y="-10%" width="140%" height="130%">
-      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#1E1325" flood-opacity="0.35"/>
+    <filter id="sombra-roxo" x="-25%" y="-15%" width="150%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#050811" flood-opacity="0.65"/>
     </filter>
   </defs>
   <!-- Marcador Pin Roxo #8854A3 -->
   <path d="M16 2 C9.37 2 4 7.37 4 14 C4 22.5 16 34 16 34 C16 34 28 22.5 28 14 C28 7.37 22.63 2 16 2 Z"
-        fill="#8854A3" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" filter="url(#sombra-roxo)"/>
+        fill="#8854A3" stroke="#0f172a" stroke-opacity="0.82" stroke-width="1.8" stroke-linejoin="round" filter="url(#sombra-roxo)"/>
   <!-- Ícone cultural / espaço tradicional no interior -->
   <path d="M16 7 L9 13.5 L10.5 15 L12 13.7 V21 H20 V13.7 L21.5 15 L23 13.5 Z M14.5 21 V16.5 H17.5 V21 Z"
         fill="#FFFFFF"/>
