@@ -435,7 +435,7 @@ function renderizar(rt, feats) {
 // Carregamento
 // ------------------------------------------------------------
 async function buscarJson(arquivo) {
-    const resp = await fetch(`data/${arquivo}?v=20261027-v23`, { cache: "no-store" });
+    const resp = await fetch(`data/${arquivo}?v=20261106-v41`, { cache: "no-store" });
     if (!resp.ok) throw new Error(`Falha ao carregar ${arquivo} (HTTP ${resp.status})`);
     return resp.json();
 }
