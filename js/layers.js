@@ -5,8 +5,8 @@
 // Nenhuma geometria é alterada: clusters e máscara são só visuais.
 // ============================================================
 
-import { POPUPS } from "./popups.js?v=20261027-v40";
-import { abrirGavetaFeicao } from "./gaveta.js?v=20261027-v40";
+import { POPUPS } from "./popups.js?v=20261106-v41";
+import { abrirGavetaFeicao } from "./gaveta.js?v=20261106-v41";
 
 const SENTINELA_VAZIO = "__vazio__";
 
@@ -26,11 +26,11 @@ const COR = {
     monumentos: "#D88335"
 };
 
-const ICONE_ESCOLA = "assets/icons/simbolo_escola_capelo_laranja.svg?v=20261027-v40";
-const ICONE_PESCA = "assets/icons/peixe_grupos_pesca_artesanal.svg.svg?v=20261027-v40";
-const ICONE_GOJ_TA_SA = "assets/icons/marcador_cultural_goj_ta_sa.svg?v=20261027-v40";
-const ICONE_MUTUCA = "assets/icons/marcador_pegadas_mutuca.svg?v=20261027-v40";
-const ICONE_MONUMENTOS = "assets/icons/marcador_monumentos_artisticos.svg?v=20261027-v40";
+const ICONE_ESCOLA = "assets/icons/simbolo_escola_capelo_laranja.svg?v=20261106-v41";
+const ICONE_PESCA = "assets/icons/peixe_grupos_pesca_artesanal.svg.svg?v=20261106-v41";
+const ICONE_GOJ_TA_SA = "assets/icons/marcador_cultural_goj_ta_sa.svg?v=20261106-v41";
+const ICONE_MUTUCA = "assets/icons/marcador_pegadas_mutuca.svg?v=20261106-v41";
+const ICONE_MONUMENTOS = "assets/icons/marcador_monumentos_artisticos.svg?v=20261106-v41";
 
 // ------------------------------------------------------------
 // Panes (ordem de empilhamento, de baixo para cima)

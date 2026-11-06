@@ -5,7 +5,7 @@
 // no painel; nenhum dado, texto ou caminho de imagem é alterado aqui.
 // ============================================================
 
-import { configurarCarrosseisPopup } from "./popups.js?v=20261027-v40";
+import { configurarCarrosseisPopup } from "./popups.js?v=20261106-v41";
 
 let gaveta = null;
 let topo = null;
@@ -102,6 +102,7 @@ function navegarLightbox(delta) {
         imgClone.src = novaImg.getAttribute("src");
         imgClone.alt = novaImg.getAttribute("alt") || "Imagem ampliada";
         focoLightbox = novaImg;
+        ajustarDimensoesLightbox(imgClone);
     }
 }
 
@@ -184,6 +185,38 @@ function obterLightbox() {
 }
 
 /**
+ * Ajusta as dimensões do clone da imagem no Lightbox para aproveitar melhor a
+ * altura disponível da tela sem causar perda perceptível de nitidez.
+ */
+function ajustarDimensoesLightbox(img) {
+    if (!img) return;
+    const aplicar = () => {
+        if (!img.naturalHeight || !img.naturalWidth) return;
+        const isVertical = img.naturalHeight > img.naturalWidth;
+        if (isVertical) {
+            const vhDisponivel = window.innerHeight * 0.92;
+            const tetoNitidez = img.naturalHeight >= vhDisponivel
+                ? vhDisponivel
+                : Math.min(vhDisponivel, Math.round(img.naturalHeight * 1.22));
+            img.style.height = `${tetoNitidez}px`;
+            img.style.maxHeight = `${tetoNitidez}px`;
+            img.style.width = "auto";
+            img.style.maxWidth = "92vw";
+        } else {
+            img.style.height = "";
+            img.style.maxHeight = "";
+            img.style.width = "";
+            img.style.maxWidth = "";
+        }
+    };
+    if (img.complete && img.naturalHeight > 0) {
+        aplicar();
+    } else {
+        img.onload = aplicar;
+    }
+}
+
+/**
  * Abre o Lightbox clonando src e alt da imagem clicada na gaveta.
  */
 export function abrirLightbox(src, alt, origemImg = null) {
@@ -205,6 +238,7 @@ export function abrirLightbox(src, alt, origemImg = null) {
 
     imgClone.src = src;
     imgClone.alt = alt || "Imagem ampliada";
+    ajustarDimensoesLightbox(imgClone);
 
     lb.classList.add("lightbox--aberto");
     lb.setAttribute("aria-hidden", "false");
@@ -220,7 +254,13 @@ export function fecharLightbox() {
     lightboxEl.setAttribute("aria-hidden", "true");
 
     const imgClone = lightboxEl.querySelector(".lightbox__img");
-    if (imgClone) imgClone.removeAttribute("src");
+    if (imgClone) {
+        imgClone.removeAttribute("src");
+        imgClone.style.height = "";
+        imgClone.style.maxHeight = "";
+        imgClone.style.width = "";
+        imgClone.style.maxWidth = "";
+    }
 
     if (focoLightbox && typeof focoLightbox.focus === "function") {
         focoLightbox.focus({ preventScroll: true });
@@ -336,6 +376,44 @@ function configurarLightboxGaveta(container) {
             e.stopPropagation();
             abrirLightbox(img.getAttribute("src"), img.getAttribute("alt"), img);
         });
+
+        const marcarVertical = () => {
+            if (img.naturalHeight > img.naturalWidth) {
+                const moldura = img.closest(".pp-midia__moldura");
+                if (moldura) moldura.classList.add("pp-midia__moldura--vertical");
+                const slide = img.closest(".pp-carrossel__slide");
+                if (slide) slide.classList.add("pp-carrossel__slide--vertical");
+                const peek = slide ? slide.querySelector(".pp-carrossel__peek") : null;
+                if (peek) peek.classList.add("pp-carrossel__peek--vertical");
+                const carrossel = img.closest(".pp-carrossel");
+                if (carrossel && slide && slide.classList.contains("pp-carrossel__slide--ativo")) {
+                    carrossel.classList.add("pp-carrossel--vertical");
+                }
+            }
+        };
+        if (img.complete && img.naturalHeight > 0) {
+            marcarVertical();
+        } else {
+            img.addEventListener("load", marcarVertical);
+        }
+    });
+
+    // Mantém a classe pp-carrossel--vertical sincronizada com o slide ativo durante navegação
+    container.querySelectorAll(".pp-carrossel").forEach(carrossel => {
+        const sincronizarVertical = () => {
+            const slideAtivo = carrossel.querySelector(".pp-carrossel__slide--ativo");
+            const eVertical = Boolean(
+                slideAtivo && (
+                    slideAtivo.classList.contains("pp-carrossel__slide--vertical") ||
+                    (slideAtivo.querySelector(".pp-midia__img") &&
+                     slideAtivo.querySelector(".pp-midia__img").naturalHeight > slideAtivo.querySelector(".pp-midia__img").naturalWidth)
+                )
+            );
+            carrossel.classList.toggle("pp-carrossel--vertical", eVertical);
+        };
+        sincronizarVertical();
+        const obs = new MutationObserver(sincronizarVertical);
+        obs.observe(carrossel, { subtree: true, attributes: true, attributeFilter: ["class"] });
     });
 }
 

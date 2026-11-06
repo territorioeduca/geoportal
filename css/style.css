@@ -2102,17 +2102,19 @@ body.gaveta-aberta .gaveta {
 /* Imagem centralizada em alta legibilidade */
 .lightbox__img {
     display: block;
-    max-width: 90vw;
-    max-height: 90vh;
+    max-width: 92vw;
+    max-height: 92vh;
     width: auto;
     height: auto;
     object-fit: contain;
+    object-position: center;
     border-radius: 10px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
     cursor: default;
     user-select: none;
     transform: scale(0.96);
     transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    image-rendering: high-quality;
 }
 
 .lightbox.lightbox--aberto .lightbox__img {
@@ -2664,6 +2666,48 @@ body.gaveta-aberta .gaveta {
 /* Placas educativas preenchem 100% do quadro arredondado sem recorte e sem barras escuras */
 .gaveta-feicao .pp-midia__img.pp-midia__img--placa {
     object-fit: fill;
+}
+
+/* Camadas Grupos de pescadores e Monumentos artísticos: exibição integral das fotos sem corte nem distorção */
+.gaveta-feicao .pp--pesca .pp-midia__moldura,
+.pp--pesca .pp-midia__moldura,
+.gaveta-feicao .pp--monumentos .pp-midia__moldura,
+.pp--monumentos .pp-midia__moldura {
+    background-color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gaveta-feicao .pp--pesca .pp-midia__img,
+.pp--pesca .pp-midia__img,
+.gaveta-feicao .pp--monumentos .pp-midia__img,
+.pp--monumentos .pp-midia__img,
+.gaveta-feicao .pp--monumentos .pp-midia__img.pp-midia__img--placa {
+    object-fit: contain;
+    object-position: center;
+}
+
+.gaveta-feicao .pp--pesca .pp-carrossel__peek,
+.gaveta-feicao .pp--monumentos .pp-carrossel__peek {
+    background-color: #0f172a;
+}
+
+/* Altura moderadamente aumentada para fotografias verticais em Monumentos artísticos */
+.gaveta-feicao .pp--monumentos .pp-midia__moldura--vertical {
+    height: 270px;
+}
+
+.gaveta-feicao .pp--monumentos .pp-carrossel__slide--vertical .pp-carrossel__peek,
+.gaveta-feicao .pp--monumentos .pp-carrossel__peek--vertical {
+    height: 270px;
+}
+
+/* Centraliza as setas de navegação verticalmente no quadro quando o slide ativo for vertical */
+.gaveta-feicao .pp--monumentos .pp-carrossel--vertical .pp-carrossel__seta,
+.gaveta-feicao .pp--monumentos.pp-carrossel--vertical .pp-carrossel__seta,
+.gaveta-feicao .pp--monumentos .pp-carrossel:has(.pp-carrossel__slide--ativo.pp-carrossel__slide--vertical) .pp-carrossel__seta {
+    top: 135px;
 }
 
 /* Faixa lateral direita com prévia ("peek") da próxima imagem do carrossel */

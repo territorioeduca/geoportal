@@ -8,7 +8,7 @@
 import {
     GRUPOS, CAMADAS, definirVisivel, valoresDoFiltro, aplicarFiltros,
     SENTINELA_VAZIO
-} from "./layers.js?v=20261027-v40";
+} from "./layers.js?v=20261106-v41";
 
 function el(tag, atributos = {}, filhos = []) {
     const e = document.createElement(tag);

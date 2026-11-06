@@ -83,9 +83,10 @@ function fonte(rotulo, valor, urlOpcional, textoLinkCustom) {
     return linha(rotulo, esc(valor));
 }
 
-function popup(titulo, subtitulo, linhas, nota, midiaHtml) {
+function popup(titulo, subtitulo, linhas, nota, midiaHtml, classeExtra) {
+    const extra = classeExtra ? ` ${classeExtra}` : "";
     if (midiaHtml) {
-        return `<div class="pp pp--com-midia">`
+        return `<div class="pp pp--com-midia${extra}">`
             + `<div class="pp__col-texto">`
             + `<h3 class="pp__titulo">${esc(titulo)}</h3>`
             + (subtitulo ? `<p class="pp__sub">${esc(subtitulo)}</p>` : "")
@@ -96,7 +97,7 @@ function popup(titulo, subtitulo, linhas, nota, midiaHtml) {
             + `</div>`;
     }
 
-    return `<div class="pp">`
+    return `<div class="pp${extra}">`
         + `<h3 class="pp__titulo">${esc(titulo)}</h3>`
         + (subtitulo ? `<p class="pp__sub">${esc(subtitulo)}</p>` : "")
         + `<dl class="pp__lista">${linhas.join("")}</dl>`
@@ -365,13 +366,18 @@ export const POPUPS = {
             linhas.push(texto("Localidade", p.localidade));
         }
         if (!vazio(p.fonte)) {
-            linhas.push(texto("Fonte", p.fonte));
+            const urlFonte = /tainhas ao vento/i.test(p.fonte)
+                ? "https://tainhasaovento.com.br/pescadores/"
+                : (urlSegura(p.fonte) ? p.fonte : null);
+            linhas.push(fonte("Fonte", p.fonte, urlFonte));
         }
         return popup(
             titulo,
             null,
             linhas,
-            "Referência territorial aproximada. Não representa localização exata, cadastro oficial nem inventário completo."
+            null,
+            montarMidia(p),
+            "pp--pesca"
         );
     },
 
@@ -398,9 +404,10 @@ export const POPUPS = {
             texto("Corpo hídrico", p.corpo_hidrico),
             municipioUf(p),
             medida("Área mapeada", p.area_ha, 2, "ha"),
-            texto("Fonte", p.fonte_dado)
+            texto("Fonte dos dados", "SINAU — Ministério da Pesca e Aquicultura (MPA)"),
+            fonte("Mapa de referência", null, "https://www.google.com/maps/d/u/0/viewer?mid=1JZHS93WhrG9E7aAFvBdYTZetqXhap9Y", "Consultar mapa de referência do SINAU")
         ],
-        "Área mapeada na base temática. Não indica, por si só, que a área esteja cultivada."
+        "Área representada na base cartográfica. A delimitação não comprova, isoladamente, cultivo em atividade."
     ),
 
     mona: p => popup(
@@ -474,6 +481,7 @@ export const POPUPS = {
             texto("Descrição", p.descricao)
         ],
         null,
-        montarMidia(p)
+        montarMidia(p),
+        "pp--monumentos"
     )
 };
